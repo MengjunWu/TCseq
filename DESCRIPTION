@@ -1,0 +1,16 @@
+Package: TCseq
+Type: Package
+Title: Time course sequencing data analysis
+Version: 1.0.0
+Author: Mengjun Wu <minervajunjun@gmail.com>, Lei Gu <leigu@broadinstitute.org>
+Maintainer: Mengjun Wu <minervajunjun@gmail.com>
+Description: Quantitative and differential analysis of epigenomic and transcriptomic time course sequencing data. Clustering analysis and visualization of temporal patterns of time course data,
+Depends: R (>= 3.3.0)
+License: GLP (>=2)
+LazyData: TRUE
+Imports: edgeR, BiocGenerics, reshape2, GenomicRanges, IRanges, SummarizedExperiment, GenomicAlignments, Rsamtools, e1071, cluster, clusterSim, ggplot2, grid, grDevices,stats,utils,
+    Rcpp,locfit
+Suggests: Rsubread, knitr, rmarkdown,testthat
+biocViews: Epigenetics, TimeCourse, Sequencing, ChIPSeq, RNASeq, DifferentialExpression, Clustering, Visualization
+RoxygenNote: 5.0.1
+LinkingTo: Rcpp
