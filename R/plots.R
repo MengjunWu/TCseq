@@ -136,7 +136,7 @@ timeclustplot <- function(object = NULL, categories = "timepoint", value = "expr
     }
 
   }
-  suppressWarnings(multiplot(plotlist = plotlist, cols = cols))
+  multiplot(plotlist = plotlist, cols = cols)
   plotlist
 }
 
@@ -150,7 +150,6 @@ multiplot <- function(..., plotlist = NULL, cols = 1, layout = NULL) {
     print(plots[[1]])
 
   } else {
-    grid.newpage()
     pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
     for (i in 1:numPlots) {
       matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
