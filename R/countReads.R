@@ -61,7 +61,7 @@ countReads <- function(object, dir, method = "summarizeoverlaps", ...) {
     row.names(count.table) <- features$id
     count.table
   }, featureCounts = {
-    warning("To use the featureCounts, you need first load 'Rsubread' pacakge")
+    warning("To use the featureCounts, you need first load 'Rsubread' pacakge.")
     gi_rsubread <- createAnnotationFile(gi)
     count.table <- NULL
     stra <- 0
