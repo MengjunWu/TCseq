@@ -34,30 +34,30 @@
 #'
 #' @export
 DBresult.filter <- function(x, pvalue = "paj", pvalue.threshold = 0.05, abs.fold = 2, direction = "both") {
-    d <- x
-    if (abs.fold < 0) {
-        err <- paste0("\"abs.fold\" should be postive number.")
-        stop(err)
-    }
-    for (i in 1:length(d)) {
-        dt <- d[[i]]
+  d <- x
+  if (abs.fold < 0) {
+    err <- paste0("\"abs.fold\" should be postive number.")
+    stop(err)
+  }
+  for (i in 1:length(d)) {
+    dt <- d[[i]]
 
-        if (direction == "up") {
-            dt <- dt[which(dt$logFC >= abs.fold), ]
-        }
-
-        if (direction == "down") {
-            dt <- dt[which(dt$logFC <= -abs.fold), ]
-        }
-        if (direction == "both") {
-            if (abs.fold == 0) {
-                dt <- rbind(dt[which(dt$logFC >= abs.fold), ], dt[which(dt$logFC < -abs.fold), ])
-            } else {
-                dt <- rbind(dt[which(dt$logFC >= abs.fold), ], dt[which(dt$logFC <= -abs.fold), ])
-            }
-        }
-        dt <- dt[which(dt[, pvalue] < pvalue.threshold), ]
-        d[[i]] <- dt
+    if (direction == "up") {
+      dt <- dt[which(dt$logFC >= abs.fold), ]
     }
-    d
+
+    if (direction == "down") {
+      dt <- dt[which(dt$logFC <= -abs.fold), ]
+    }
+    if (direction == "both") {
+      if (abs.fold == 0) {
+        dt <- rbind(dt[which(dt$logFC >= abs.fold), ], dt[which(dt$logFC < -abs.fold), ])
+      } else {
+        dt <- rbind(dt[which(dt$logFC >= abs.fold), ], dt[which(dt$logFC <= -abs.fold), ])
+      }
+    }
+    dt <- dt[which(dt[, pvalue] < pvalue.threshold), ]
+    d[[i]] <- dt
+  }
+  d
 }

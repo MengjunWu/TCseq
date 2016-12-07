@@ -34,49 +34,50 @@
 #'
 #' @export
 countReads <- function(object, dir, method = "summarizeoverlaps", ...) {
-    if (!"BAMfile" %in% colnames(object@design)) {
-        err <- paste0("Can not find 'BAMfile' in design, please check if the correspoinding field is missing or uses a different column name.")
-        stop(err)
+  if (!"BAMfile" %in% colnames(object@design)) {
+    err <- paste0("Can not find 'BAMfile' in design, please check if the correspoinding field is missing or uses a different column name.")
+    stop(err)
+  }
+  old <- setwd(tempdir())
+  on.exit(setwd(old), add = TRUE)
+  setwd(dir)
+  bamfiles <- as.vector(object@design$BAMfile)
+  features <- object@genomicFeature
+  ignore.strand <- NULL
+  if (is.null(features$strand)) {
+    warning("No strand information is provided, strand is ignored in reads counting")
+    ignore.strand <- TRUE
+  }
+  gi <- GenomicRanges::GRanges(seqnames = features$chr, strand = features$strand, id = features$id, ranges = IRanges::IRanges(features$start +
+                                                                                                                                1, width = features$end - features$start))
+  method1 <- tolower(method)
+  if (method1 == "featureCounts" && .Platform$OS.type == "windows") {
+    stop(" 'featureCounts' is only available in Linux/Mac OS system.")
+  }
+  count.table <- switch(method1, summarizeoverlaps = {
+    bamfl <- Rsamtools::BamFileList(bamfiles, yieldSize = 1e+06)
+    c <- GenomicAlignments::summarizeOverlaps(gi, bamfl, ignore.strand = ignore.strand, ...)
+    count.table <- SummarizedExperiment::assays(c)$counts
+    row.names(count.table) <- features$id
+    count.table
+  }, featureCounts = {
+    warning("To use the featureCounts, you need first load 'Rsubread' pacakge")
+    gi_rsubread <- createAnnotationFile(gi)
+    count.table <- NULL
+    stra <- 0
+    if (!ignore.strand) {
+      stra <- 1
     }
-    old <- setwd(tempdir())
-    on.exit(setwd(old), add = TRUE)
-    setwd(dir)
-    bamfiles <- as.vector(object@design$BAMfile)
-    features <- object@genomicFeature
-    ignore.strand <- NULL
-    if (is.null(features$strand)) {
-        warning("No strand information is provided, strand is ignored in reads counting")
-        ignore.strand <- TRUE
+    for (i in bamfiles) {
+      m <- paste0("Mapping bamfile ", i, " to the reference peakset")
+      message(m)
+      o <- capture.output(x <- featureCounts(i, annot.ext = gi_rsubread, strandSpecific = stra, ...))
+      count.table <- cbind(count.table, x$counts)
     }
-    gi <- GenomicRanges::GRanges(seqnames = features$chr, strand = features$strand, id = features$id, ranges = IRanges::IRanges(features$start + 
-        1, width = features$end - features$start))
-    method1 <- tolower(method)
-    if (method1 == "featureCounts" && .Platform$OS.type == "windows") {
-        stop(" 'featureCounts' is only available in Linux/Mac OS system.")
-    }
-    count.table <- switch(method1, summarizeoverlaps = {
-        bamfl <- Rsamtools::BamFileList(bamfiles, yieldSize = 1e+06)
-        c <- GenomicAlignments::summarizeOverlaps(gi, bamfl, ignore.strand = ignore.strand, ...)
-        count.table <- SummarizedExperiment::assays(c)$counts
-        row.names(count.table) <- features$id
-        count.table
-    }, rsubread = {
-        gi_rsubread <- createAnnotationFile(gi)
-        count.table <- NULL
-        stra <- 0
-        if (!ignore.strand) {
-            stra <- 1
-        }
-        for (i in bamfiles) {
-            m <- paste0("Mapping bamfile ", i, " to the reference peakset")
-            message(m)
-            o <- capture.output(x <- featureCounts(i, annot.ext = gi_rsubread, strandSpecific = stra, ...))
-            count.table <- cbind(count.table, x$counts)
-        }
-        rm(o)
-        count.table
-    })
-    count.table <- as.matrix(count.table)
-    counts(object) <- count.table
-    object
+    rm(o)
+    count.table
+  })
+  count.table <- as.matrix(count.table)
+  counts(object) <- count.table
+  object
 }

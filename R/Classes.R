@@ -24,53 +24,53 @@
 #'@seealso \code{\link{timeclust}}, \code{\link{@}}
 #'@exportClass clust
 
-clust <- setClass("clust", slots = c(method = "character", dist = "character", data = "matrix", centers = "matrix", 
-    cluster = "integer", membership = "matrix"))
+clust <- setClass("clust", slots = c(method = "character", dist = "character", data = "matrix", centers = "matrix",
+                                     cluster = "integer", membership = "matrix"))
 
 #'@rdname TCA
 #'@export
-setClass("TCA", slots = c(design = "data.frame", counts = "matrix", genomicFeature = "data.frame", DBfit = "DGEGLM", 
-    contrasts = "matrix", tcTable = "matrix", clusterRes = "clust"), prototype = list(counts = matrix(0L, 0L, 0L), 
-    design <- data.frame()))
+setClass("TCA", slots = c(design = "data.frame", counts = "matrix", genomicFeature = "data.frame", DBfit = "DGEGLM",
+                          contrasts = "matrix", tcTable = "matrix", clusterRes = "clust"), prototype = list(counts = matrix(0L, 0L, 0L),
+                                                                                                            design <- data.frame()))
 
 setValidity("TCA", function(object) {
-    counts <- object@counts
-    design <- object@design
-    genomicFeature <- object@genomicFeature
-    if (!is.numeric(counts)) {
-        stop("All counts must be numeric.")
+  counts <- object@counts
+  design <- object@design
+  genomicFeature <- object@genomicFeature
+  if (!is.numeric(counts)) {
+    stop("All counts must be numeric.")
+  }
+  if (any(is.na(counts))) {
+    stop("NA values are not allowed in counts. ")
+  }
+  if (any(counts < 0)) {
+    stop("counts contain negative number(s), all counts must be positive")
+  }
+  if (!is.integer(counts)) {
+    if (any(round(counts) != counts)) {
+      stop("All counts must be intergers.")
+    } else {
+      mode(counts) <- "integer"
+      warning("All counts are coerced to integers.")
     }
-    if (any(is.na(counts))) {
-        stop("NA values are not allowed in counts. ")
+  }
+  if (!identical(matrix(0L, 0L, 0L), counts)) {
+    if (ncol(counts) != nrow(design)) {
+      stop("Number of columns in 'counts' must equal to number of rows in 'design'.")
     }
-    if (any(counts < 0)) {
-        stop("counts contain negative number(s), all counts must be positive")
+    if (nrow(counts) != nrow(genomicFeature)) {
+      stop("Number of rows in 'counts' must equal to number of rows in 'genomicFeature'")
     }
-    if (!is.integer(counts)) {
-        if (any(round(counts) != counts)) {
-            stop("All counts must be intergers.")
-        } else {
-            mode(counts) <- "integer"
-            warning("All counts are coerced to integers.")
-        }
-    }
-    if (!identical(matrix(0L, 0L, 0L), counts)) {
-        if (ncol(counts) != nrow(design)) {
-            stop("Number of columns in 'counts' must equal to number of rows in 'design'.")
-        }
-        if (nrow(counts) != nrow(genomicFeature)) {
-            stop("Number of rows in 'counts' must equal to number of rows in 'genomicFeature'")
-        }
-    }
-    if (!sum(c("sampleid", "timepoint", "group") %in% tolower(colnames(design))) == 3) {
-        err <- paste0("One or more following required fields in genomicFeature are missing: 'sampleid', 'timepoint', 'group', check if the columns are correctly named or if the corresponding information is provided.")
-        stop(err)
-    }
-    if (!sum(c("id", "chr", "start", "end") %in% tolower(colnames(genomicFeature))) == 4) {
-        err <- paste0("One or more following required fields in genomicFeature are missing: 'id', 'chr', 'start','end', check if the columns are correctly named or if the corresponding information is provided.")
-        stop(err)
-    }
-    TRUE
+  }
+  if (!sum(c("sampleid", "timepoint", "group") %in% tolower(colnames(design))) == 3) {
+    err <- paste0("One or more following required fields in genomicFeature are missing: 'sampleid', 'timepoint', 'group', check if the columns are correctly named or if the corresponding information is provided.")
+    stop(err)
+  }
+  if (!sum(c("id", "chr", "start", "end") %in% tolower(colnames(genomicFeature))) == 4) {
+    err <- paste0("One or more following required fields in genomicFeature are missing: 'id', 'chr', 'start','end', check if the columns are correctly named or if the corresponding information is provided.")
+    stop(err)
+  }
+  TRUE
 })
 
 
@@ -129,59 +129,59 @@ setValidity("TCA", function(object) {
 #'
 #'@export
 TCA <- function(design, counts = matrix(0L, 0L, 0L), genomicFeature) {
-    
-    if (!is.numeric(counts)) {
-        stop("All counts must be numeric.")
+
+  if (!is.numeric(counts)) {
+    stop("All counts must be numeric.")
+  }
+  if (any(is.na(counts))) {
+    stop("NA values are not allowed in counts.")
+  }
+  if (any(counts < 0)) {
+    stop("counts contain negative number(s), all counts must be positive")
+  }
+  if (!is.integer(counts)) {
+    if (any(round(counts) != counts)) {
+      stop("All counts must be intergers.")
+    } else {
+      mode(counts) <- "integer"
+      warning("All counts are coerced to integers.")
     }
-    if (any(is.na(counts))) {
-        stop("NA values are not allowed in counts.")
+  }
+  if (!is.data.frame(design)) {
+    stop("design must be 'data.frame'.")
+  }
+
+  if (!identical(matrix(0L, 0L, 0L), counts)) {
+    if (ncol(counts) != nrow(design)) {
+      stop("number of columns in 'counts' must equal to number of rows in 'design'.")
     }
-    if (any(counts < 0)) {
-        stop("counts contain negative number(s), all counts must be positive")
+    if (nrow(counts) != nrow(genomicFeature)) {
+      stop("Number of rows in 'counts' must equal to number of rows in 'genomicFeature'")
     }
-    if (!is.integer(counts)) {
-        if (any(round(counts) != counts)) {
-            stop("All counts must be intergers.")
-        } else {
-            mode(counts) <- "integer"
-            warning("All counts are coerced to integers.")
-        }
-    }
-    if (!is.data.frame(design)) {
-        stop("design must be 'data.frame'.")
-    }
-    
-    if (!identical(matrix(0L, 0L, 0L), counts)) {
-        if (ncol(counts) != nrow(design)) {
-            stop("number of columns in 'counts' must equal to number of rows in 'design'.")
-        }
-        if (nrow(counts) != nrow(genomicFeature)) {
-            stop("Number of rows in 'counts' must equal to number of rows in 'genomicFeature'")
-        }
-    }
-    
-    if (!is.data.frame(genomicFeature)) {
-        stop("genomicFeature must be 'data.frame'.")
-    }
-    if (!sum(c("sampleid", "timepoint", "group") %in% tolower(colnames(design))) == 3) {
-        err <- paste0("One or more following required fields in genomicFeature are missing: 'sampleid', 'timepoint', 'group', check if the columns are correctly named or if the corresponding information is provided.")
-        stop(err)
-    }
-    if (!sum(c("sampleid", "timepoint", "group") %in% colnames(design)) == 3) {
-        colnames(design) <- tolower(colnames(design))
-        warning("colnames of genomicFeature are all forced to lowercase.")
-    }
-    if (!sum(c("id", "chr", "start", "end") %in% tolower(colnames(genomicFeature))) == 4) {
-        err <- paste0("One or more following required fields in genomicFeature are missing: 'id', 'chr', 'start','end', check if the columns are correctly named or if the corresponding information is provided. ")
-        stop(err)
-    }
-    if (!sum(c("id", "chr", "start", "end") %in% colnames(genomicFeature)) == 4) {
-        colnames(genomicFeature) <- tolower(colnames(genomicFeature))
-        warning("colnames of genomicFeature are all forced to lowercase.")
-    }
-    
-    object <- new("TCA", design = design, counts = counts, genomicFeature = genomicFeature)
-    object
+  }
+
+  if (!is.data.frame(genomicFeature)) {
+    stop("genomicFeature must be 'data.frame'.")
+  }
+  if (!sum(c("sampleid", "timepoint", "group") %in% tolower(colnames(design))) == 3) {
+    err <- paste0("One or more following required fields in genomicFeature are missing: 'sampleid', 'timepoint', 'group', check if the columns are correctly named or if the corresponding information is provided.")
+    stop(err)
+  }
+  if (!sum(c("sampleid", "timepoint", "group") %in% colnames(design)) == 3) {
+    colnames(design) <- tolower(colnames(design))
+    warning("colnames of genomicFeature are all forced to lowercase.")
+  }
+  if (!sum(c("id", "chr", "start", "end") %in% tolower(colnames(genomicFeature))) == 4) {
+    err <- paste0("One or more following required fields in genomicFeature are missing: 'id', 'chr', 'start','end', check if the columns are correctly named or if the corresponding information is provided. ")
+    stop(err)
+  }
+  if (!sum(c("id", "chr", "start", "end") %in% colnames(genomicFeature)) == 4) {
+    colnames(genomicFeature) <- tolower(colnames(genomicFeature))
+    warning("colnames of genomicFeature are all forced to lowercase.")
+  }
+
+  object <- new("TCA", design = design, counts = counts, genomicFeature = genomicFeature)
+  object
 }
 
 setIs("clust", "LargeDataObject")

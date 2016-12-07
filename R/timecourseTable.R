@@ -50,77 +50,77 @@
 #' @export
 #'
 #'
-timecourseTable <- function(object, value = "expression", lib.norm = TRUE, norm.method = "rpkm", subset = NULL, 
-    filter = FALSE, pvalue = "fdr", pvalue.threshold = 0.05, abs.fold = 2, direction = "both", ...) {
-    if (!value %in% c("expression", "FC")) {
-        err <- paste0("The value of time course table should be either normalized expression table (value=\"expression\") or logarithm of fold changes (value=\"FC\")")
-        stop(err)
+timecourseTable <- function(object, value = "expression", lib.norm = TRUE, norm.method = "rpkm", subset = NULL,
+                            filter = FALSE, pvalue = "fdr", pvalue.threshold = 0.05, abs.fold = 2, direction = "both", ...) {
+  if (!value %in% c("expression", "FC")) {
+    err <- paste0("The value of time course table should be either normalized expression table (value=\"expression\") or logarithm of fold changes (value=\"FC\")")
+    stop(err)
+  }
+  group <- unique(object@design$timepoint)
+  genointerval <- object@genomicFeature[object@genomicFeature$id %in% row.names(object@DBfit$counts), ]
+  if (value == "expression") {
+    count <- object@DBfit$counts
+    if (lib.norm) {
+      y <- DGEList(counts = count, group = object@design$timepoint)
+      y <- calcNormFactors(y)
+    } else {
+      y <- DGEList(counts = count, group = object@design$timepoint)
     }
-    group <- unique(object@design$timepoint)
-    genointerval <- object@genomicFeature[object@genomicFeature$id %in% row.names(object@DBfit$counts), ]
-    if (value == "expression") {
-        count <- object@DBfit$counts
-        if (lib.norm) {
-            y <- DGEList(counts = count, group = object@design$timepoint)
-            y <- calcNormFactors(y)
-        } else {
-            y <- DGEList(counts = count, group = object@design$timepoint)
-        }
-        if (!norm.method %in% c("rpkm", "cpm")) {
-            err <- paste0("norm.method should be one of \"rpkm\" or \"cpm\".")
-            stop(err)
-        }
-        tc <- switch(norm.method, rpkm = {
-            giwidth <- genointerval$end - genointerval$start
-            t <- rpkm(y, normalized.lib.size = lib.norm, gene.length = giwidth, ...)
-            t
-        }, cpm = {
-            t <- cpm(y, normalized.lib.size = lib.norm, ...)
-            t
-        })
-        tc <- data.frame(tc, stringsAsFactors = FALSE)
-        colnames(tc) <- object@design$timepoint
-        tc <- as.data.frame(sapply(unique(names(tc)), function(col) rowMeans(tc[names(tc) == col])))
+    if (!norm.method %in% c("rpkm", "cpm")) {
+      err <- paste0("norm.method should be one of \"rpkm\" or \"cpm\".")
+      stop(err)
     }
-    if (value == "FC") {
-        tc <- NULL
-        group1 <- group[1]
-        tc <- cbind(tc, rep(0, length(genointerval[, 1])))
-        group2 <- group[group != group1]
-        t <- DBresult(object, group1 = group1, group2 = group2)
-        for (i in t) {
-            tc <- cbind(tc, i$logFC)
-        }
-        colnames(tc) <- group
-        rownames(tc) <- genointerval$id
+    tc <- switch(norm.method, rpkm = {
+      giwidth <- genointerval$end - genointerval$start
+      t <- rpkm(y, normalized.lib.size = lib.norm, gene.length = giwidth, ...)
+      t
+    }, cpm = {
+      t <- cpm(y, normalized.lib.size = lib.norm, ...)
+      t
+    })
+    tc <- data.frame(tc, stringsAsFactors = FALSE)
+    colnames(tc) <- object@design$timepoint
+    tc <- as.data.frame(sapply(unique(names(tc)), function(col) rowMeans(tc[names(tc) == col])))
+  }
+  if (value == "FC") {
+    tc <- NULL
+    group1 <- group[1]
+    tc <- cbind(tc, rep(0, length(genointerval[, 1])))
+    group2 <- group[group != group1]
+    t <- DBresult(object, group1 = group1, group2 = group2)
+    for (i in t) {
+      tc <- cbind(tc, i$logFC)
     }
-    tc <- as.matrix(tc)
-    
-    if (filter) {
-        contrasts <- colnames(object@contrasts)
-        if (pvalue == "PValue") {
-            p <- "none"
-            p2 <- "PValue"
-        } else {
-            p <- pvalue
-            p2 <- "paj"
-        }
-        DBtmp <- DBresult(object, contrasts = contrasts, p.adjust = p)
-        DBtmpfilter <- DBresult.filter(DBtmp, pvalue = p2, pvalue.threshold = pvalue.threshold, abs.fold = abs.fold, 
-            direction = direction)
-        feature.filter <- c()
-        for (i in DBtmpfilter) {
-            feature.filter <- c(feature.filter, rownames(i))
-        }
-        tc <- tc[unique(feature.filter), ]
+    colnames(tc) <- group
+    rownames(tc) <- genointerval$id
+  }
+  tc <- as.matrix(tc)
+
+  if (filter) {
+    contrasts <- colnames(object@contrasts)
+    if (pvalue == "PValue") {
+      p <- "none"
+      p2 <- "PValue"
+    } else {
+      p <- pvalue
+      p2 <- "paj"
     }
-    
-    if (!is.null(subset)) {
-        tc <- tc[row.names(tc) %in% subset, ]
+    DBtmp <- DBresult(object, contrasts = contrasts, p.adjust = p)
+    DBtmpfilter <- DBresult.filter(DBtmp, pvalue = p2, pvalue.threshold = pvalue.threshold, abs.fold = abs.fold,
+                                   direction = direction)
+    feature.filter <- c()
+    for (i in DBtmpfilter) {
+      feature.filter <- c(feature.filter, rownames(i))
     }
-    
-    object@tcTable <- tc
-    object
+    tc <- tc[unique(feature.filter), ]
+  }
+
+  if (!is.null(subset)) {
+    tc <- tc[row.names(tc) %in% subset, ]
+  }
+
+  object@tcTable <- tc
+  object
 }
 
 

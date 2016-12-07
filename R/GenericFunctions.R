@@ -16,33 +16,33 @@
 #' @importFrom grDevices rainbow
 #' @importFrom stats as.dist complete.cases cor cutree hclust kmeans model.matrix sd time
 #' @importFrom utils capture.output read.table
-#' @rawNamespace if(.Platform$OS.type != 'windows') {importFrom(Rsubread, featureCounts)}
+#' @importFrom methods new validObject
 NULL
 
 counts.TCA <- function(object, normalization = "none", lib.norm = TRUE, log = FALSE, ...) {
-    if (!normalization %in% c("none", "rpkm", "cpm")) {
-        stop("'normalization method should one of 'none', 'rpkm', 'cpm'.")
+  if (!normalization %in% c("none", "rpkm", "cpm")) {
+    stop("'normalization method should one of 'none', 'rpkm', 'cpm'.")
+  }
+  if (normalization == "none") {
+    t <- object@counts
+  }
+  if (normalization != "none") {
+    genomicFeature <- object@genomicFeature
+    group <- object@design$group
+    y <- DGEList(counts = object@counts, group = group)
+    if (lib.norm) {
+      y <- calcNormFactors(y)
     }
-    if (normalization == "none") {
-        t <- object@counts
-    }
-    if (normalization != "none") {
-        genomicFeature <- object@genomicFeature
-        group <- object@design$group
-        y <- DGEList(counts = object@counts, group = group)
-        if (lib.norm) {
-            y <- calcNormFactors(y)
-        }
-        c <- switch(normalization, rpkm = {
-            giwidth <- genomicFeature$end - genomicFeature$start
-            t <- rpkm(y, normalized.lib.sizes = lib.norm, gene.length = giwidth, log = log, ...)
-            t
-        }, cpm = {
-            t <- cpm(y, normalized.lib.sizes = lib.norm, log = log, ...)
-            t
-        })
-    }
-    t
+    c <- switch(normalization, rpkm = {
+      giwidth <- genomicFeature$end - genomicFeature$start
+      t <- rpkm(y, normalized.lib.sizes = lib.norm, gene.length = giwidth, log = log, ...)
+      t
+    }, cpm = {
+      t <- cpm(y, normalized.lib.sizes = lib.norm, log = log, ...)
+      t
+    })
+  }
+  t
 }
 
 #' Extracts counts of a TCA object.
@@ -97,9 +97,9 @@ setMethod("counts", "TCA", counts.TCA)
 #' @rdname counts
 #' @exportMethod 'counts<-'
 setMethod("counts<-", "TCA", function(object, value) {
-    object@counts <- value
-    validObject(object)
-    object
+  object@counts <- value
+  validObject(object)
+  object
 })
 
 
@@ -132,7 +132,7 @@ setMethod("counts<-", "TCA", function(object, value) {
 #' @rdname Accessors
 #' @export
 setMethod("design", "TCA", function(object) {
-    object@design
+  object@design
 })
 
 #' @rdname Accessors
@@ -140,7 +140,7 @@ setMethod("design", "TCA", function(object) {
 
 setGeneric("genomicFeature", function(object) standardGeneric("genomicFeature"))
 setMethod("genomicFeature", "TCA", function(object) {
-    object@genomicFeature
+  object@genomicFeature
 })
 
 #' @rdname Accessors
@@ -152,7 +152,7 @@ setGeneric("tcTable", function(object) standardGeneric("tcTable"))
 #' @export
 
 setMethod("tcTable", "TCA", function(object) {
-    object@tcTable
+  object@tcTable
 })
 
 #' @rdname Accessors
@@ -164,5 +164,5 @@ setGeneric("clustResults", function(object) standardGeneric("clustResults"))
 #' @export
 
 setMethod("clustResults", "TCA", function(object) {
-    object@clusterRes
+  object@clusterRes
 })

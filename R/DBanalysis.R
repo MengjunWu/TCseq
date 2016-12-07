@@ -50,78 +50,78 @@
 #'
 #' @export
 DBanalysis <- function(object, categories = "timepoint", norm.lib = TRUE, filter.type = NULL, filter.value = NULL,
-    samplePassfilter = 2, ...) {
-    if (!categories %in% colnames(object@design)) {
-        err <- paste0("Can not find ", categories, " in design, please check if the correspoinding field is missing or a different name is used.")
-        stop(err)
+                       samplePassfilter = 2, ...) {
+  if (!categories %in% colnames(object@design)) {
+    err <- paste0("Can not find ", categories, " in design, please check if the correspoinding field is missing or a different name is used.")
+    stop(err)
+  }
+
+  object@contrasts <- contrastMatrix(object, categories)
+
+  # require(edgeR)
+  group <- object@design[[categories]]
+  y <- DGEList(counts = object@counts, group = group)
+  if (norm.lib) {
+    y <- calcNormFactors(y)
+  }
+  if (!is.null(filter.type)) {
+    if (is.null(filter.value)) {
+      err <- paste0("\"filter.value\" is required to be specified for the chosen filter.type ", filter.type,
+                    ".")
+      stop("\"filter.value\" is required to be specified for chosen .")
+    } else {
+      y <- switch(filter.type, raw = {
+        ind <- rowSums(y$counts > filter.value) >= samplePassfilter
+        y <- y[ind, , keep.lib.sizes = FALSE]
+        y
+      }, cpm = {
+        ind <- rowSums(cpm(y, ...) > filter.value) >= samplePassfilter
+        y <- y[ind, , keep.lib.sizes = FALSE]
+        y
+
+      }, rpkm = {
+        giwidth <- object@genomicFeature$end - object@genomicFeature$start
+        ind <- rowSums(rpkm(y, gene.length = giwidth, ...) > filter.value) >= samplePassfilter
+        y <- y[ind, , keep.lib.sizes = FALSE]
+        y
+      })
     }
+  }
 
-    object@contrasts <- contrastMatrix(object, categories)
-
-    # require(edgeR)
-    group <- object@design[[categories]]
-    y <- DGEList(counts = object@counts, group = group)
-    if (norm.lib) {
-        y <- calcNormFactors(y)
-    }
-    if (!is.null(filter.type)) {
-        if (is.null(filter.value)) {
-            err <- paste0("\"filter.value\" is required to be specified for the chosen filter.type ", filter.type,
-                ".")
-            stop("\"filter.value\" is required to be specified for chosen .")
-        } else {
-            y <- switch(filter.type, raw = {
-                ind <- rowSums(y$counts > filter.value) >= samplePassfilter
-                y <- y[ind, , keep.lib.sizes = FALSE]
-                y
-            }, cpm = {
-                ind <- rowSums(cpm(y, ...) > filter.value) >= samplePassfilter
-                y <- y[ind, , keep.lib.sizes = FALSE]
-                y
-
-            }, rpkm = {
-                giwidth <- object@genomicFeature$end - object@genomicFeature$start
-                ind <- rowSums(rpkm(y, gene.length = giwidth, ...) > filter.value) >= samplePassfilter
-                y <- y[ind, , keep.lib.sizes = FALSE]
-                y
-            })
-        }
-    }
-
-    design <- model.matrix(~0 + group, data = y$samples)
-    colnames(design) <- levels(y$samples$group)
-    design <- design[, unique(group)]
-    y <- estimateDisp(y, design)
-    fit <- glmFit(y, design, ...)
-    object@DBfit <- fit
-    object
+  design <- model.matrix(~0 + group, data = y$samples)
+  colnames(design) <- levels(y$samples$group)
+  design <- design[, unique(group)]
+  y <- estimateDisp(y, design)
+  fit <- glmFit(y, design, ...)
+  object@DBfit <- fit
+  object
 }
 
 # initialize a contrast table with all possible comibinations of group in defined categories
 contrastMatrix <- function(object, categories) {
-    ca <- unique(object@design[[categories]])
-    a <- length(ca)
-    b <- 2 * choose(a, 2)
-    contrastM <- matrix(0, a, b)
-    name <- c()
-    count <- 1
-    count.col <- -1
-    count.col2 <- 0
-    for (i in 1:(a - 1)) {
-        count = count + 1
-        for (j in count:a) {
-            count.col <- count.col + 2
-            count.col2 <- count.col2 + 2
-            n <- paste0(ca[j], "vs", ca[i])
-            n1 <- paste0(ca[i], "vs", ca[j])
-            name <- c(name, n, n1)
-            contrastM[i, count.col] = -1
-            contrastM[j, count.col] = 1
-            contrastM[j, count.col2] = -1
-            contrastM[i, count.col2] = 1
-        }
+  ca <- unique(object@design[[categories]])
+  a <- length(ca)
+  b <- 2 * choose(a, 2)
+  contrastM <- matrix(0, a, b)
+  name <- c()
+  count <- 1
+  count.col <- -1
+  count.col2 <- 0
+  for (i in 1:(a - 1)) {
+    count = count + 1
+    for (j in count:a) {
+      count.col <- count.col + 2
+      count.col2 <- count.col2 + 2
+      n <- paste0(ca[j], "vs", ca[i])
+      n1 <- paste0(ca[i], "vs", ca[j])
+      name <- c(name, n, n1)
+      contrastM[i, count.col] = -1
+      contrastM[j, count.col] = 1
+      contrastM[j, count.col2] = -1
+      contrastM[i, count.col2] = 1
     }
-    dimnames(contrastM) <- list(ca, name)
-    contrastM
+  }
+  dimnames(contrastM) <- list(ca, name)
+  contrastM
 }
 

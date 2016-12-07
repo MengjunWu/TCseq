@@ -47,106 +47,106 @@
 #' @export
 
 peakreference <- function(data = NULL, dir = NULL, pattern = NULL, merge = TRUE, overlap = 1, ratio = NULL) {
-    if (is.null(data) && is.null(dir)) {
-        stop("Either a data.frame of all peak information or directory where the BED files store should be given")
+  if (is.null(data) && is.null(dir)) {
+    stop("Either a data.frame of all peak information or directory where the BED files store should be given")
+  }
+  if (!is.null(data)) {
+    checkBEDformat(data)
+    data[, 1] <- factor(data[, 1])
+    peakset <- data
+  }
+  if (is.null(data) && !is.null(dir)) {
+    old <- setwd(tempdir())
+    on.exit(setwd(old), add = TRUE)
+    setwd(dir)
+    filenames <- list.files(pattern = pattern)
+    if (length(filenames) == 0) {
+      err <- paste0("Can not find file names containing \"", pattern, "\".")
+      stop(err)
     }
-    if (!is.null(data)) {
-        checkBEDformat(data)
-        data[, 1] <- factor(data[, 1])
-        peakset <- data
+    datalist <- lapply(filenames, function(x) {
+      read.table(file = x, header = FALSE)
+    })
+    peakset <- do.call(rbind, datalist)
+    checkBEDformat(peakset)
+  }
+  peakset <- peakset[order(peakset[, 1], peakset[, 2]), ]
+  if (merge) {
+    if (overlap <= 0 || round(overlap) != overlap) {
+      stop("\"overlap\" must be integer and greater than 0.")
     }
-    if (is.null(data) && !is.null(dir)) {
-        old <- setwd(tempdir())
-        on.exit(setwd(old), add = TRUE)
-        setwd(dir)
-        filenames <- list.files(pattern = pattern)
-        if (length(filenames) == 0) {
-            err <- paste0("Can not find file names containing \"", pattern, "\".")
-            stop(err)
-        }
-        datalist <- lapply(filenames, function(x) {
-            read.table(file = x, header = FALSE)
-        })
-        peakset <- do.call(rbind, datalist)
-        checkBEDformat(peakset)
-    }
-    peakset <- peakset[order(peakset[, 1], peakset[, 2]), ]
-    if (merge) {
-        if (overlap <= 0 || round(overlap) != overlap) {
-            stop("\"overlap\" must be integer and greater than 0.")
-        }
-        peakset.sub <- split(peakset, peakset[, 1], drop = TRUE)
-        level <- levels(peakset[, 1])
-        mergedpeak <- c()
-        for (i in 1:length(peakset.sub)) {
-            temp <- peakset.sub[[i]]
-            if (is.null(ratio)) {
-                submerge <- intervalmerge(temp[, 2], temp[, 3], overlap = overlap)
-            } else {
-                submerge <- intervalmerge(temp[, 2], temp[, 3], ratio = ratio)
-            }
+    peakset.sub <- split(peakset, peakset[, 1], drop = TRUE)
+    level <- levels(peakset[, 1])
+    mergedpeak <- c()
+    for (i in 1:length(peakset.sub)) {
+      temp <- peakset.sub[[i]]
+      if (is.null(ratio)) {
+        submerge <- intervalmerge(temp[, 2], temp[, 3], overlap = overlap)
+      } else {
+        submerge <- intervalmerge(temp[, 2], temp[, 3], ratio = ratio)
+      }
 
-            chr <- rep(level[i], length(submerge[, 1]))
-            submerge1 <- data.frame(chr, submerge)
-            mergedpeak <- rbind(mergedpeak, submerge1)
-        }
-        name <- paste0("peak", 1:length(mergedpeak[, 1]))
-        mergedpeak <- data.frame(mergedpeak, name)
-        colnames(mergedpeak) <- c("chr", "start", "end", "id")
-        mergedpeak
-    } else {
-        peakset
+      chr <- rep(level[i], length(submerge[, 1]))
+      submerge1 <- data.frame(chr, submerge)
+      mergedpeak <- rbind(mergedpeak, submerge1)
     }
+    name <- paste0("peak", 1:length(mergedpeak[, 1]))
+    mergedpeak <- data.frame(mergedpeak, name)
+    colnames(mergedpeak) <- c("chr", "start", "end", "id")
+    mergedpeak
+  } else {
+    peakset
+  }
 
 }
 
 
 checkBEDformat <- function(data) {
-    if (ncol(data) < 3) {
-        stop("At least three columns should be provided. The first column contains chromosome name,
-             the second column contains starting position, the third column contains ending position.")
-    }
-    if (class(as.vector(data[, 1])) != "character") {
-        stop("The first column contains chromosome name and must be character.")
-    }
-    if (class(data[, 2]) != "numeric" && class(data[, 3]) != "numeric") {
-        stop("the second and third column contain starting and ending positions, must be numeric.")
-    }
-}
+  if (ncol(data) < 3) {
+    stop("At least three columns should be provided. The first column contains chromosome name,
+         the second column contains starting position, the third column contains ending position.")
+  }
+  if (class(as.vector(data[, 1])) != "character") {
+    stop("The first column contains chromosome name and must be character.")
+  }
+  if (class(data[, 2]) != "numeric" && class(data[, 3]) != "numeric") {
+    stop("the second and third column contain starting and ending positions, must be numeric.")
+  }
+  }
 
 intervalmerge <- function(a0, b0, overlap = NULL, ratio = NULL) {
-    if (length(a0) > 1) {
-        a1 <- c(a0[1])
-        b1 <- c(b0[1])
-        merge <- NULL
-        for (i in 1:length(a0) - 1) {
-            if (is.null(ratio)) {
-                if (b1[length(b1)] - a0[i + 1] < overlap) {
-                  a1 <- append(a1, a0[i + 1])
-                  b1 <- append(b1, b0[i + 1])
-                } else {
-                  b1[length(b1)] <- max(b1[length(b1)], b0[i + 1])
-                }
-            }
-            if (is.null(overlap)) {
-                len <- min((b1[length(b1)] - a1[length(b1)]), (b0[i + 1] - a0[i + 1]))
-                rt <- (b1[length(b1)] - a0[i + 1])/len
-                if (rt < ratio) {
-                  a1 <- append(a1, a0[i + 1])
-                  b1 <- append(b1, b0[i + 1])
-                } else {
-                  b1[length(b1)] <- max(b1[length(b1)], b0[i + 1])
-                }
-            }
+  if (length(a0) > 1) {
+    a1 <- c(a0[1])
+    b1 <- c(b0[1])
+    merge <- NULL
+    for (i in 1:length(a0) - 1) {
+      if (is.null(ratio)) {
+        if (b1[length(b1)] - a0[i + 1] < overlap) {
+          a1 <- append(a1, a0[i + 1])
+          b1 <- append(b1, b0[i + 1])
+        } else {
+          b1[length(b1)] <- max(b1[length(b1)], b0[i + 1])
         }
-        merge <- cbind(a1, b1)
+      }
+      if (is.null(overlap)) {
+        len <- min((b1[length(b1)] - a1[length(b1)]), (b0[i + 1] - a0[i + 1]))
+        rt <- (b1[length(b1)] - a0[i + 1])/len
+        if (rt < ratio) {
+          a1 <- append(a1, a0[i + 1])
+          b1 <- append(b1, b0[i + 1])
+        } else {
+          b1[length(b1)] <- max(b1[length(b1)], b0[i + 1])
+        }
+      }
     }
-    if (length(a0) <= 1) {
-        a1 <- c(a0[1])
-        b1 <- c(b0[1])
-        merge <- cbind(a1, b1)
-    }
-    merge
+    merge <- cbind(a1, b1)
+  }
+  if (length(a0) <= 1) {
+    a1 <- c(a0[1])
+    b1 <- c(b0[1])
+    merge <- cbind(a1, b1)
+  }
+  merge
 }
 
 
