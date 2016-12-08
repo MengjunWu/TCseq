@@ -8,7 +8,7 @@ Description: Quantitative and differential analysis of epigenomic and transcript
 Depends: R (>= 3.3.0)
 License: GLP (>=2)
 LazyData: TRUE
-Imports: edgeR,BiocGenerics, reshape2, GenomicRanges, IRanges, SummarizedExperiment, GenomicAlignments, Rsamtools, e1071, cluster, clusterSim, ggplot2, grid, grDevices,stats,utils,methods,Rcpp,locfit
+Imports: edgeR,BiocGenerics, reshape2, GenomicRanges, IRanges, SummarizedExperiment, GenomicAlignments, Rsamtools, e1071, cluster, ggplot2, grid, grDevices,stats,utils,methods,Rcpp,locfit
 Suggests: testthat
 biocViews: Epigenetics, TimeCourse, Sequencing, ChIPSeq, RNASeq, DifferentialExpression, Clustering, Visualization
 RoxygenNote: 5.0.1
