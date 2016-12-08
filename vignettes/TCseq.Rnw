@@ -48,7 +48,6 @@
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \begin{document}
-\SweaveOpts{concordance=FALSE}
 
 \maketitle
 
