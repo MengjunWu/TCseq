@@ -1,54 +1,20 @@
+% \VignetteIndexEntry{TCseq Vignette}
+% \VignetteDepends{TCseq}
+% \VignetteKeywords{Time course sequencing analysis, Clustering}
+% \VignettePackage{TCseq}
+
 \documentclass[a4paper]{article}
-
-\usepackage[a4paper]{geometry}
-\usepackage[usenames,dvipsnames]{color}
-\usepackage{times}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage[pdftitle={Vignette: TCseq},%
-  pdfauthor={Mengjun Wu},%
-  bookmarks,
-  colorlinks=false,
-  linktoc=section,
-  linkcolor= BlueViolet,%
-  citecolor=BlueViolet,%
-  urlcolor=BlueViolet,%
-  linkbordercolor={.7 .7 .7},
-  citebordercolor={.7 .7 .7},
-  urlbordercolor={.7 .7 .7} ,
-  raiselinks,%
-  plainpages,%
-  pdftex]{hyperref}
-
-
- \usepackage[utf8]{inputenc}
-
-\usepackage{Sweave}
-\usepackage{color}
+\usepackage{a4wide}
+\usepackage[utf8]{inputenc}
 \usepackage{float}
-\hypersetup{
-    colorlinks,
-    linktocpage,
-    citecolor=black,
-    filecolor=black,
-    linkcolor=black,
-    urlcolor=black
-}
-
-%%necessary to add the next line with % sign
-%\VignetteIndexEntry{sSeq}
-
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-
-
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 \title{TCseq: time course sequencing data analysis}
 \author{Mengjun, Lei Gu}
 \date{ \today }
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+\usepackage{Sweave}
 \begin{document}
-
 \maketitle
 
 %--------------------------------------------------
@@ -168,7 +134,8 @@ When the counts table is available, BAM file information is not mandatory in the
 > data("experiment")
 > #Counts table
 > data("countsTable")
-> tca <- TCA(design = experiment, counts = countsTable, genomicFeature = genomicIntervals)
+> tca <- TCA(design = experiment, genomicFeature = genomicIntervals,
++            counts = countsTable)
 > tca
 \end{Sinput}
 \begin{Soutput}
@@ -274,8 +241,8 @@ peak6 -0.1883967 0.4047199035 0.655933437 chr1 13154468 13154786 peak6
 Significant differential events (log2-fold > 2 or log2-fold < -2, adjusted p-value < 0.05) can be further extracted by:
 \begin{Schunk}
 \begin{Sinput}
-> DBres.sig <- DBresult.filter(DBres, pvalue = "paj", pvalue.threshold = 0.05, abs.fold = 2,
-+                             direction = "both")
+> DBres.sig <- DBresult.filter(DBres, pvalue = "paj", pvalue.threshold = 0.05,
++                              abs.fold = 2, direction = "both")
 > str(DBres.sig, strict.width =  "cut")
 \end{Sinput}
 \begin{Soutput}
