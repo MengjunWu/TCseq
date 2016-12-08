@@ -2,11 +2,9 @@
 #' @import edgeR
 #' @import e1071
 #' @import cluster
-#' @import clusterSim
 #' @import reshape2
 #' @import grid
 #' @import locfit
-#' @import Rcpp
 #' @importFrom BiocGenerics counts counts<- design
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
