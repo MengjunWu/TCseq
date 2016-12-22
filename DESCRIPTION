@@ -1,13 +1,13 @@
 Package: TCseq
 Type: Package
 Title: Time course sequencing data analysis
-Version: 0.99.4
+Version: 0.99.9
 Author: Mengjun Wu <minervajunjun@gmail.com>, Lei Gu <leigu@broadinstitute.org>
 Maintainer: Mengjun Wu <minervajunjun@gmail.com>
 Description: Quantitative and differential analysis of epigenomic and
     transcriptomic time course sequencing data, clustering analysis
     and visualization of temporal patterns of time course data.
-Depends: R (>= 3.3.0)
+Depends: R (>= 3.4)
 License: GPL (>= 2)
 LazyData: TRUE
 Imports: edgeR, BiocGenerics, reshape2, GenomicRanges, IRanges,
