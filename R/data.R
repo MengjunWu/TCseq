@@ -16,7 +16,8 @@ NULL
 
 #' An example experiment design without BAM file infomration
 #'
-#' A dataset of exemplary experiment design without BAM file infomration
+#' A dataset of exemplary experiment design without BAM file
+#' infomration
 #'
 #' @docType data
 #' @keywords datasets
@@ -32,7 +33,8 @@ NULL
 
 #' An example experiment design with BAM file infomration
 #'
-#' A dataset of exemplary experiment design with BAM file infomration
+#' A dataset of exemplary experiment design with BAM file
+#' infomration
 #'
 #' @docType data
 #' @keywords datasets
@@ -63,8 +65,9 @@ NULL
 
 #' An example TCA object
 #'
-#' A TCA object storing exemplary ATAC-seq time course data, including
-#' the experiment design, counts table, reference genomic regions.
+#' A TCA object storing exemplary ATAC-seq time course data,
+#' including the experiment design, counts table, reference
+#' genomic regions.
 #'
 #' @docType data
 #' @keywords datasets

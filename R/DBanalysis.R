@@ -1,36 +1,44 @@
 #' Perform differential binding analysis
 #'
-#' This function performs differetial analysis by fitting read counts
-#' to a negative binomial generalized linear model.
+#' This function performs differetial analysis by fitting read
+#' counts to a negative binomial generalized linear model.
 #'
 #' @param object a \code{TCA} object.
 #'
-#' @param categories character string indicating levels of which factor (column
-#' in the \code{design} slot) are compared in the differential analysis. For time
-#' course analysis, the default factor is '\code{timepoint}'.
+#' @param categories character string indicating levels of which
+#' factor (column in the \code{design} slot) are compared in the
+#' differential analysis. For time course analysis, the default
+#' factor is \code{timepoint}'.
 #'
-#' @param norm.lib logical indicating whether or not use effective library size when perform
-#' normalization. See 'Details' of \code{\link{counts}}
+#' @param norm.lib logical indicating whether or not use effective
+#' library size when perform normalization. See 'Details' of
+#' \code{\link{counts}}
 #'
-#' @param filter.type character string indicating which type of count (raw or normalized) is used
-#' when doing filtering. Options are '\code{raw}', '\code{cpm}', '\code{rpkm}', '\code{NULL}'.
-#' '\code{NULL}' means no filtering will be performed.
+#' @param filter.type character string indicating which type of count
+#' (raw or normalized) is used when doing filtering. Options are
+#' '\code{raw}', \code{cpm}', '\code{rpkm}', '\code{NULL}'. \code{NULL}'
+#' means no filtering will be performed.
 #'
-#' @param filter.value A numberic value; if values of selected \code{filter.type} ('\code{raw}',
-#' '\code{cpm}', '\code{rpkm}') of a genomic feature are larger than the \code{filter.value} in
-#' at least a certain number (\code{samplePassfilter}) of samples/libraries for any of the conditions,
-#' such genomic feature will be kept; otherwise the genomic feature will be dropped
+#' @param filter.value A numberic value; if values of selected
+#' \code{filter.type} ('\code{raw}', \code{cpm}', '\code{rpkm}') of
+#' a genomic feature are larger than the \code{filter.value} in at
+#' least a certain number (\code{samplePassfilter}) of
+#' samples/libraries for any of the conditions, such genomic feature
+#' will be kept; otherwise the genomic feature will be dropped.
 #'
-#' @param samplePassfilter numberic value indicating the least number of samples/libraries a genomic
-#' feature with counts (raw or normalized) more than \code{filter.value} for all conditions if such
-#' genomic feature will be kept.
+#' @param samplePassfilter numberic value indicating the least number
+#' of samples/libraries a genomic feature with counts
+#' (raw or normalized) more than \code{filter.value} for all conditions
+#' if such genomic feature will be kept.
 #'
-#' @param ... additional arguments passed to \code{\link{glmFit}} from edgeR package.
+#' @param ... additional arguments passed to \code{\link{glmFit}} from
+#' \code{edgeR} package.
 #'
-#' @details The differetial event is detected by using the generalized linear model (GLM) methods
-#' (McCarthy et al, 2012). This function fits the read counts of each genes to a negative binomial
-#' glms by using \code{\link{glmFit}} function from edgeR. To further test the significance of changes,
-#' see \code{DBresult}, \code{TopDBresult}
+#' @details The differetial event is detected by using the generalized
+#' linear model (GLM) methods (McCarthy et al, 2012). This function
+#' fits the read counts of each genes to a negative binomial glms by
+#' using \code{\link{glmFit}} function from edgeR. To further test the
+#' significance of changes, see \code{DBresult}, \code{TopDBresult}
 #'
 
 #' @return
@@ -39,8 +47,9 @@
 #' @author
 #' Mengjun Wu, Lei Gu
 #'
-#' @references McCarthy,D.J.,Chen, Y., & Smyth, G. K.(2012). Differential expression analysis of multifactor RNA-Seq
-#' experiments with respect to biological variation. Nucleic acids research 40, 4288-4297.
+#' @references McCarthy,D.J.,Chen, Y., & Smyth, G. K.(2012). Differential
+#' expression analysis of multifactor RNA-Seq experiments with respect to
+#' biological variation. Nucleic acids research 40, 4288-4297.
 #'
 #' @seealso \code{DBresult}, \code{TopDBresult}
 #'
@@ -49,7 +58,8 @@
 #' tca_ATAC <- DBanalysis(tca_ATAC)
 #'
 #' @export
-DBanalysis <- function(object, categories = "timepoint", norm.lib = TRUE, filter.type = NULL, filter.value = NULL,
+DBanalysis <- function(object, categories = "timepoint", norm.lib = TRUE,
+                       filter.type = NULL, filter.value = NULL,
                        samplePassfilter = 2, ...) {
   if (!categories %in% colnames(object@design)) {
     err <- paste0("Can not find ", categories, " in design, please check if the correspoinding field is missing or a different name is used.")
@@ -66,8 +76,8 @@ DBanalysis <- function(object, categories = "timepoint", norm.lib = TRUE, filter
   }
   if (!is.null(filter.type)) {
     if (is.null(filter.value)) {
-      err <- paste0("\"filter.value\" is required to be specified for the chosen filter.type ", filter.type,
-                    ".")
+      err <- paste0("\"filter.value\" is required to be specified for the chosen filter.type ",
+                    filter.type, ".")
       stop("\"filter.value\" is required to be specified for chosen .")
     } else {
       y <- switch(filter.type, raw = {
@@ -103,18 +113,19 @@ contrastMatrix <- function(object, categories) {
   a <- length(ca)
   b <- 2 * choose(a, 2)
   contrastM <- matrix(0, a, b)
-  name <- c()
+  name <- vector(mode = "character", length = b)
   count <- 1
   count.col <- -1
   count.col2 <- 0
-  for (i in 1:(a - 1)) {
+  for (i in seq_len((a - 1))) {
     count = count + 1
     for (j in count:a) {
       count.col <- count.col + 2
       count.col2 <- count.col2 + 2
       n <- paste0(ca[j], "vs", ca[i])
       n1 <- paste0(ca[i], "vs", ca[j])
-      name <- c(name, n, n1)
+      name[count.col] <- n
+      name[count.col2] <- n1
       contrastM[i, count.col] = -1
       contrastM[j, count.col] = 1
       contrastM[j, count.col2] = -1
