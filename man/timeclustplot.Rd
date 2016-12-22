@@ -17,31 +17,44 @@ timeclustplot(object = NULL, categories = "timepoint",
 
 \item{value}{character string giving the y-axis label}
 
-\item{cols}{integer value specifying number of columns in the final layout.}
+\item{cols}{integer value specifying number of columns in the final
+layout.}
 
-\item{cl.color}{character string specifying a color for hard clustering.}
+\item{cl.color}{character string specifying a color for hard
+clustering.}
 
-\item{membership.color}{color palettes, a character vector of n colors}
+\item{membership.color}{color palettes, a character vector of
+n colors}
 
-\item{title.size}{numeric value specifying the font size of title of each plot in the layout}
+\item{title.size}{numeric value specifying the font size of title
+of each
+plot in the layout}
 
-\item{axis.line.size}{numeric value specifying the size of both axis lines}
+\item{axis.line.size}{numeric value specifying the size of both
+axis lines}
 
-\item{axis.title.size}{numeric value specifying the font size of titles of both axis}
+\item{axis.title.size}{numeric value specifying the font size of
+titles of both axis}
 
-\item{axis.text.size}{numeric value specifying the font size of labels of both axis}
+\item{axis.text.size}{numeric value specifying the font size of
+labels of both axis}
 
-\item{legend.title.size}{numeric value specifying the font size of legend title}
+\item{legend.title.size}{numeric value specifying the font size
+of legend title}
 
-\item{legend.text.size}{numeric value specifying the font size of legend text}
+\item{legend.text.size}{numeric value specifying the font size of
+legend text}
 }
 \value{
-Plot all clusters in one plot and return a list of ggplot objects, each object is for one cluster.
-The ggplot object can be drawed by calling \code{\link{print.ggplot}}
+Plot all clusters in one plot and return a list of ggplot objects,
+each object is for one cluster. The ggplot object can be drawed by
+calling \code{\link{print.ggplot}}
 }
 \description{
-This function plots the clusters generated from \code{\link{timeclust}}. For fuzzy cmeans clustering,
-data points are color-coded according to membership values, the color palettes can be customized.
+This function plots the clusters generated from
+\code{\link{timeclust}}. For fuzzy cmeans clustering, data points
+are color-coded according to membership values, the color palettes
+can be customized.
 }
 \examples{
 x <- matrix(sample(500, 1600, replace = TRUE), nrow = 200,

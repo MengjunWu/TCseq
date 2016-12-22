@@ -8,41 +8,47 @@ peakreference(data = NULL, dir = NULL, pattern = NULL, merge = TRUE,
   overlap = 1, ratio = NULL)
 }
 \arguments{
-\item{data}{a data frame containg coordinates information of peaks to be merged. Columns of the data frame
-should be consistent with the BED format where the first column is the name of the chromosome, the second
-column is the starting position and the third column is the ending position.}
+\item{data}{a data frame containg coordinates information of peaks
+to be merged. Columns of the data frame should be consistent with
+the BED format where the first column is the name of the chromosome,
+the second column is the starting position and the third column is
+the ending position.}
 
-\item{dir}{character string giving the directory where BED files are stored. If \code{data} is not given,
-the function will reads in the BED files under \code{code}.}
+\item{dir}{character string giving the directory where BED files
+are stored. If \code{data} is not given, the function will reads
+in the BED files under \code{code}.}
 
-\item{pattern}{an \code{\link{regular expression}}, only files that have names match the regular expression
-will be read in.}
+\item{pattern}{an \code{\link{regular expression}}, only files that
+have names match the regular expression will be read in.}
 
-\item{merge}{logical indicating whether to merge overlapped regions or not. If False, regions are simply
-combined.}
+\item{merge}{logical indicating whether to merge overlapped regions
+or not. If False, regions are simply combined.}
 
-\item{overlap}{a numberic value giving the least number of base(s) two regions should overlap when merging
-them.}
+\item{overlap}{a numberic value giving the least number of base(s)
+two regions should overlap when merging them.}
 
-\item{ratio}{a numberic value giving the thresold of overlapping ratio between two regions to merge them.
-See '\code{Details}'
-below for the definition of the overlapping ratio.}
+\item{ratio}{a numberic value giving the thresold of overlapping
+ratio between two regions to merge them. See '\code{Details}' below
+for the definition of the overlapping ratio.}
 }
 \value{
-a data frame with four columns: \code{chr}, \code{start}, \code{stop}, \code{id}
+a data frame with four columns: \code{chr}, \code{start},
+\code{stop}, \code{id}
 }
 \description{
-This function merges genomic coordinates of a given data frame or reads in BED files (e.g. generated from
-a peak caller) under given directory and merge genomic regions that have overlapping genomic intervals into
-a single feature. The single feature represents the widest genomic interval that covers all merged regions.
+This function merges genomic coordinates of a given data frame or
+reads in BED files (e.g. generated from a peak caller) under given
+directory and merge genomic regions that have overlapping genomic
+intervals into a single feature. The single feature represents
+the widest genomic interval that covers all merged regions.
 }
 \details{
 The overlapping ratio (OR) is defined as:
 
 \deqn{ OR = \frac{n}{\min(length(a), length(b)}}
 
-\eqn{a}, \eqn{b} are two genomic regions, \eqn{n} is the number of overlapping bases between region \eqn{a}
-and region \eqn{b}.
+\eqn{a}, \eqn{b} are two genomic regions, \eqn{n} is the number of
+overlapping bases between region \eqn{a} and region \eqn{b}.
 }
 \examples{
 peaks <- data.frame(chr = c(rep('chr1',4),rep('chr2', 3), rep('chr3',2)),

@@ -13,7 +13,8 @@ data(experiment)
 A data frame
 }
 \description{
-A dataset of exemplary experiment design without BAM file infomration
+A dataset of exemplary experiment design without BAM file
+infomration
 }
 \examples{
 data(experiment)

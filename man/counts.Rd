@@ -15,16 +15,20 @@
 \arguments{
 \item{object}{a \code{TCA} object}
 
-\item{normalization}{character string giving the normalization method. Options
-are '\code{none}' (original raw counts), '\code{cpm}' (counts per million),
+\item{normalization}{character string giving the normalization method.
+Options are '\code{none}' (original raw counts), '\code{cpm}' (counts
+per million),
 '\code{rpkm}' (reads per kilobase per million).}
 
-\item{lib.norm}{logical indicating whether or not use effective library size
-(see 'Details' below) when \code{normalization} is '\code{cpm}' or '\code{rpkm}'.}
+\item{lib.norm}{logical indicating whether or not use effective library
+size (see 'Details' below) when \code{normalization} is '\code{cpm}' or
+'\code{rpkm}'.}
 
-\item{log}{logical if \code{TRUE}, the returned value will be on a log2 scale.}
+\item{log}{logical if \code{TRUE}, the returned value will be on a log2
+scale.}
 
-\item{...}{additional arguments passed to \code{\link{cpm}} or \code{\link{rpkm}}}
+\item{...}{additional arguments passed to \code{\link{cpm}} or
+\code{\link{rpkm}}}
 
 \item{value}{an integer matrix}
 }
@@ -32,19 +36,20 @@ are '\code{none}' (original raw counts), '\code{cpm}' (counts per million),
 An integer matrix
 }
 \description{
-\code{counts} extract raw read counts stored in a \code{TCA} object or compute normalized counts.
+\code{counts} extract raw read counts stored in a \code{TCA} object or
+compute normalized counts.
 }
 \details{
-when calculating normalized counts, library size can be rescaled to
-minimize the log-fold changes between samples for most genomic features
+when calculating normalized counts, library size can be rescaled
+to minimize the log-fold changes between samples for most genomic features
 (e.g. genes, binding sites) by multiplying a scale factor. The rescaled
 library size is called effective library size. In this function, the scale
-factor is calculated using the weighted trimmed mean of M-values (TMM, Robinson
-et al (2010))
+factor is calculated using the weighted trimmed mean of M-values (TMM,
+Robinson et al (2010))
 
-If log2 values are computed, a small count would be added to avoid logarithm of zero.
-a small count is set proportional to the library size, the average value of such small
-counts of all libraries counts is set to 0.25 by default.
+If log2 values are computed, a small count would be added to avoid logarithm
+of zero. a small count is set proportional to the library size, the average
+value of such small counts of all libraries counts is set to 0.25 by default.
 }
 \examples{
 data(tca_ATAC)
@@ -56,6 +61,7 @@ c_norm <- counts(tca_ATAC, normalization='rpkm')
 Mengjun Wu
 }
 \references{
-Robinson, M. D., & Oshlack, A. (2010). A scaling normalization method for differential expression analysis of RNA-seq data. Genome biology, 11(3), 1.
+Robinson, M. D., & Oshlack, A. (2010). A scaling normalization method for
+differential expression analysis of RNA-seq data. Genome biology, 11(3), 1.
 }
 

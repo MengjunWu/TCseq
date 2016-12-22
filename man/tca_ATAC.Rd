@@ -12,8 +12,9 @@ data(tca_ATAC)
 A TCA object
 }
 \description{
-A TCA object storing exemplary ATAC-seq time course data, including
-the experiment design, counts table, reference genomic regions.
+A TCA object storing exemplary ATAC-seq time course data,
+including the experiment design, counts table, reference
+genomic regions.
 }
 \examples{
 data(tca_ATAC)
