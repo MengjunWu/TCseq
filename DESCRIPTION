@@ -1,7 +1,7 @@
 Package: TCseq
 Type: Package
 Title: Time course sequencing data analysis
-Version: 1.7.0
+Version: 1.7.1
 Author: Mengjun Wu <minervajunjun@gmail.com>, Lei Gu
         <leigu@broadinstitute.org>
 Maintainer: Mengjun Wu <minervajunjun@gmail.com>
@@ -16,6 +16,6 @@ Imports: edgeR, BiocGenerics, reshape2, GenomicRanges, IRanges,
         cluster, ggplot2, grid, grDevices, stats, utils, methods,
         locfit
 Suggests: testthat
-biocViews: Epigenetics, TimeCourse, Sequencing, ChIPSeq, RNASeq,
+biocViews: ImmunoOncology, Epigenetics, TimeCourse, Sequencing, ChIPSeq, RNASeq,
         DifferentialExpression, Clustering, Visualization
 RoxygenNote: 5.0.1
