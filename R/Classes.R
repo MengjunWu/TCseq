@@ -42,7 +42,7 @@ setClass("TCA", slots = c(design = "data.frame", counts = "matrix",
                           DBfit = "DGEGLM",contrasts = "matrix",
                           tcTable = "matrix", clusterRes = "clust"),
          prototype = list(counts = matrix(0L, 0L, 0L),
-                          design <- data.frame()))
+                          design = data.frame()))
 
 setValidity("TCA", function(object) {
   counts <- object@counts
