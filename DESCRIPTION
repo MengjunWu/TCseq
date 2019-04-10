@@ -1,8 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 Package: TCseq
 Type: Package
 Title: Time course sequencing data analysis
-Version: 0.99.9
+Version: 1.6.1
 Author: Mengjun Wu <minervajunjun@gmail.com>, Lei Gu <leigu@broadinstitute.org>
 Maintainer: Mengjun Wu <minervajunjun@gmail.com>
 Description: Quantitative and differential analysis of epigenomic and
@@ -19,6 +20,8 @@ biocViews: Epigenetics, TimeCourse, Sequencing, ChIPSeq, RNASeq,
     DifferentialExpression, Clustering, Visualization
 RoxygenNote: 5.0.1
 =======
+=======
+>>>>>>> upstream/master
 Package: TCseq
 Type: Package
 Title: Time course sequencing data analysis
@@ -40,4 +43,7 @@ Suggests: testthat
 biocViews: ImmunoOncology, Epigenetics, TimeCourse, Sequencing, ChIPSeq, RNASeq,
         DifferentialExpression, Clustering, Visualization
 RoxygenNote: 5.0.1
+<<<<<<< HEAD
+>>>>>>> upstream/master
+=======
 >>>>>>> upstream/master
