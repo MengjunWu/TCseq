@@ -279,9 +279,7 @@ TCAFromSummarizedExperiment <-function(se, genomicFeature=NULL){
 
 setIs("clust", "LargeDataObject")
 setIs("TCA", "LargeDataObject")
-=======
-=======
->>>>>>> upstream/master
+
 #' clust class
 #'
 #'\code{clust} is a S4 class for storing results of a clustering
