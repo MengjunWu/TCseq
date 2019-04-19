@@ -130,6 +130,8 @@ timecourseTable <- function(object, value = "expression", lib.norm = TRUE,
     }
     DBtmpfilter <- DBresult(object, contrasts = contrasts,
                             p.adjust = p, result.type = "list",
+                            abs.fold = abs.fold,
+                            pvalue.threshold = pvalue.threshold,
                             top.sig = TRUE)
     feature.filter <- c()
     for (i in DBtmpfilter) {

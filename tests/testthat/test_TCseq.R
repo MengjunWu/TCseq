@@ -66,3 +66,35 @@ peaks_expect2 <- data.frame(chr = c(rep("chr1",3),rep("chr2", 2), rep("chr3",2))
 
 expect_equal(merged_peaks2, peaks_expect2)
 
+test_that("timecourseTable filters by abs.fold", {
+  # loading data
+  data(tca_ATAC)
+  tca <- DBanalysis(tca_ATAC)
+  
+  # using default values
+  res1 <- DBresult(tca,
+                   contrasts = colnames(tca@contrasts),
+                   result.type = 'list',
+                   top.sig = TRUE)
+  n_deg1 <- length(unique(na.omit(unlist(lapply(res1, function(x) x$id[(x$paj < .05) && (abs(x$logFC) > 2)])))))
+  
+  tca1 <- timecourseTable(tca,
+                          filter = TRUE)
+  
+  expect_equal(nrow(tcTable(tca1)), n_deg1)
+  
+  # change defaults
+  res2 <- DBresult(tca,
+                   contrasts = colnames(tca@contrasts),
+                   result.type = 'list',
+                   abs.fold = 5,
+                   top.sig = TRUE)
+  
+  n_deg2 <- length(unique(na.omit(unlist(lapply(res2, function(x) x$id[(x$paj < .05) && (abs(x$logFC) > 5)])))))
+  
+  tca2 <- timecourseTable(tca,
+                          abs.fold = 5,
+                          filter = TRUE)
+  
+  expect_equal(nrow(tcTable(tca2)), n_deg2)
+})
