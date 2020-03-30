@@ -74,8 +74,10 @@
 #' @export
 timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
                       standardize = TRUE, ...) {
-  if (class(x) != "matrix" && class(x) != "TCA") {
-    stop("x should be a numeric matrix or a 'TCA' object")
+  if (class(x) != "matrix") {
+    if(class(x) != "TCA"){
+      stop("x should be a numeric matrix or a 'TCA' object")
+    }
   }
   if (class(x) == "matrix") {
     data <- x
@@ -122,11 +124,15 @@ timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
   if (!dist %in% c("correlation", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")) {
     stop("Distance metric should be 'correlation', or one of the distance measures in dist function")
   }
-  if (algo == "km" && dist != "euclidean") {
-    stop("kmeans only support euclidean metric; for other distance metrices, please see the help page")
+  if (algo == "km") {
+    if(dist != "euclidean"){
+      stop("kmeans only support euclidean metric; for other distance metrices, please see the help page")
+    }
   }
-  if (algo == "cm" && !dist %in% c("euclidean", "manhattan")) {
-    stop("cmeans only support euclidean or mahattan distance metrics")
+  if (algo == "cm" ) {
+    if(!dist %in% c("euclidean", "manhattan")){
+      stop("cmeans only support euclidean or mahattan distance metrics")
+    }
   }
 
   d <- NULL
