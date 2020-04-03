@@ -61,9 +61,10 @@
 #'
 #' @examples
 #'
-#' x <- matrix(rnorm(1600,sd=0.3), nrow = 200,
+#' example.mat <- matrix(rnorm(1600,sd=0.3), nrow = 200,
 #'             dimnames = list(paste0('peak', 1:200), 1:8))
-#' clust_res <- timeclust(x, algo = 'cm', k = 4) # return a clust object
+#' clust_res <- timeclust(x = example.mat, algo = 'cm', k = 4) 
+#' # return a clust object
 #'
 #' @author
 #' Mengjun Wu
@@ -80,25 +81,25 @@ timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
     }
   }
   if (class(x) == "matrix") {
-    data <- x
+    data.tmp <- x
   }
   if (class(x) == "TCA") {
-    data <- x@tcTable
+    data.tmp <- x@tcTable
   }
   if (standardize) {
-    for (i in seq_len(nrow(data))) {
-      data[i, ] <- (data[i, ] - mean(data[i, ], na.rm = TRUE))/sd(data[i, ], na.rm = TRUE)
+    for (i in seq_len(nrow(data.tmp))) {
+      data.tmp[i, ] <- (data.tmp[i, ] - mean(data.tmp[i, ], na.rm = TRUE))/sd(data.tmp[i, ], na.rm = TRUE)
     }
-    data <- data[complete.cases(data), ]
+    data.tmp <- data.tmp[complete.cases(data.tmp), ]
   }
   object <- new("clust")
   object@method <- algo
   object@dist <- dist
-  object@data <- data
-
-  res <- .timeclust(data = data, algo = algo, k = k, dist = dist,
+  object@data <- data.tmp
+  
+  res <- .timeclust(data = data.tmp, algo = algo, k = k, dist = dist,
                     centers = centers, ...)
-
+  
   if (algo == "cm") {
     object@cluster <- res$cluster
     object@membership <- res$membership
@@ -134,7 +135,7 @@ timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
       stop("cmeans only support euclidean or mahattan distance metrics")
     }
   }
-
+  
   d <- NULL
   if (algo %in% c("pam", "hc")) {
     if (dist == "correlation") {
