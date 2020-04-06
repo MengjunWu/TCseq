@@ -4,8 +4,15 @@
 \alias{timeclust}
 \title{time couse data clustering}
 \usage{
-timeclust(x, algo, k, dist = "euclidean", centers = NULL,
-  standardize = TRUE, ...)
+timeclust(
+  x,
+  algo,
+  k,
+  dist = "euclidean",
+  centers = NULL,
+  standardize = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a \code{TCA} object returned from
@@ -68,16 +75,16 @@ in different conditions).
 }
 \examples{
 
-x <- matrix(rnorm(1600,sd=0.3), nrow = 200,
+example.mat <- matrix(rnorm(1600,sd=0.3), nrow = 200,
             dimnames = list(paste0('peak', 1:200), 1:8))
-clust_res <- timeclust(x, algo = 'cm', k = 4) # return a clust object
+clust_res <- timeclust(x = example.mat, algo = 'cm', k = 4) 
+# return a clust object
 
-}
-\author{
-Mengjun Wu
 }
 \seealso{
 \code{\link{clust}}, \code{\link{kmeans}},
 \code{\link{pam}}, \code{\link{hclust}}, \code{\link{cutree}}
 }
-
+\author{
+Mengjun Wu
+}
