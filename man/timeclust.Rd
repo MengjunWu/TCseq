@@ -73,14 +73,6 @@ different conditions), \eqn{\sigma} is the standard deviation
 (e.g., standard deviation of expression of a genomic feature
 in different conditions).
 }
-\examples{
-
-example.mat <- matrix(rnorm(1600,sd=0.3), nrow = 200,
-            dimnames = list(paste0('peak', 1:200), 1:8))
-clust_res <- timeclust(x = example.mat, algo = 'cm', k = 4) 
-# return a clust object
-
-}
 \seealso{
 \code{\link{clust}}, \code{\link{kmeans}},
 \code{\link{pam}}, \code{\link{hclust}}, \code{\link{cutree}}
