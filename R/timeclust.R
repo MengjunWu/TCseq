@@ -68,11 +68,6 @@
 #' @export
 timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
                       standardize = TRUE, ...) {
-  if (class(x) != "matrix") {
-    if(class(x) != "TCA"){
-      stop("x should be a numeric matrix or a 'TCA' object")
-    }
-  }
   if (class(x) == "matrix") {
     data.tmp <- x
   }
