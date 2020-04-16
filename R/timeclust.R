@@ -54,11 +54,17 @@
 #' in different conditions).
 #'
 #'
-#'
 #' @return
 #' If x is a \code{TCA} object, a \code{TCA} object will be returned.
 #' If x is a matrix, a \code{clust} object will be returned
 #'
+#' @examples
+#'
+#' example.mat <- matrix(rnorm(1600,sd=0.3), nrow = 200,
+#'             dimnames = list(paste0('peak', 1:200), 1:8))
+#' clust_res <- timeclust(x = example.mat, algo = 'cm', k = 4) 
+#' # return a clust object
+#' 
 #' @author
 #' Mengjun Wu
 #'
@@ -68,10 +74,9 @@
 #' @export
 timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
                       standardize = TRUE, ...) {
-  if (class(x) == "matrix") {
+  if (is.matrix(x)) {
     data.tmp <- x
-  }
-  if (class(x) == "TCA") {
+  }else{
     data.tmp <- x@tcTable
   }
   if (standardize) {
