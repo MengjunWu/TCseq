@@ -101,7 +101,7 @@ timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
     object@cluster <- res$cluster
     object@centers <- res$centers
   }
-  if (class(x) == "matrix") {
+  if (is.matrix(x)) {
     object
   } else {
     x@clusterRes <- object
