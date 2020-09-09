@@ -171,11 +171,9 @@ DBresult <- function(object, group1 = NULL, group2 = NULL,
   for (i in contrasts) {
     tmp <- glmLRT(fit, contrast = contrast.table[, i])
     restmp <- tmp$table[, c(1, 4)]
-    if (!p.adjust == "none") {
-      adjustp <- p.adjust(restmp$PValue, method = p.adjust)
-      restmp <- cbind(restmp, adjustp)
-      colnames(restmp)[length(restmp[1, ])] <- "paj"
-    }
+    adjustp <- p.adjust(restmp$PValue, method = p.adjust)
+    restmp <- cbind(restmp, adjustp)
+    colnames(restmp)[length(restmp[1, ])] <- "paj"
     restmp <- cbind(restmp, gi, stringsAsFactors = FALSE)
     res[[i]] <- restmp
   }
