@@ -1,6 +1,6 @@
 #' constructs time course table for clustering analysis
 #'
-#' This fuction constructs a time course table of which rows
+#' This function constructs a time course table of which rows
 #' corrsponding to genomic features and columns the timepoint.
 #' values can be mean normalized read counts or log2-fold
 #' changes compared to the first timepoint. The time course
