@@ -28,8 +28,10 @@
 #' \code{pvalue.threshold},\code{abs.fold} and \code{direction})
 #' between any two time points.
 #'
-#' @param pvalue character string specify the type of p-values
-#' ('\code{PValue}' or adjusted p-value 'paj')
+#' @param pvalue character string specify the type of p-values:
+#' '\code{none}' is unadjusted p-value or one of adjusted p-value 
+#' '\code{holm}', '\code{hochberg}', '\code{hommel}', '\code{bonferroni}', 
+#' '\code{BH}', '\code{BY}', '\code{fdr}' 
 #'
 #' @param pvalue.threshold a numeric value giving threshold of
 #' selected p-value, only features with higher (ajusted) p-values
