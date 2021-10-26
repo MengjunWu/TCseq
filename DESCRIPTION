@@ -1,7 +1,7 @@
 Package: TCseq
 Type: Package
 Title: Time course sequencing data analysis
-Version: 1.18.0
+Version: 1.19.0
 Author: Mengjun Wu <minervajunjun@gmail.com>, Lei Gu <leigu@broadinstitute.org>
 Maintainer: Mengjun Wu <minervajunjun@gmail.com>
 Description: Quantitative and differential analysis of epigenomic and
