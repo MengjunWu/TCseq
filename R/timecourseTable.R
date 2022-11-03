@@ -104,10 +104,9 @@ timecourseTable <- function(object, value = "expression", lib.norm = TRUE,
     tc <- as.data.frame(sapply(unique(names(tc)), function(col) rowMeans(tc[names(tc) == col])))
   }
   if (value == "FC") {
-    tc <- NULL
     group1 <- group[1]
-    tc <- cbind(tc, rep(0, length(genointerval[, 1])))
     group2 <- group[group != group1]
+    tc <- matrix(0, nrow = dim(genointerval)[1])
     t <- DBresult(object, group1 = group1, group2 = group2,
                   top.sig = FALSE, result.type = "list")
     t <- as(t, "list")
