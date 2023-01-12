@@ -2,40 +2,39 @@
 % Please edit documentation in R/Classes.R
 \docType{class}
 \name{clust-class}
-\alias{clust}
 \alias{clust-class}
+\alias{clust}
 \title{clust class}
 \description{
-\code{clust} is a S4 class for storing results of a clustering
-analysis for time course data.
+\code{clust} is a S4 class for storing results of the clustering
+analysis of time course data.
 }
 \details{
-:
 The clust objects are returned from \code{\link{timeclust}} and have
 a show method printing a compact summary of their contents
 }
 \section{Slots}{
 
-Oject of this class contains the following slots:
+Object of \code{clust} class contains the following slots:
 \describe{
- \item{\code{method}}{clustering method that has been used}
- \item{\code{dist}}{distance method that has been used}
- \item{\code{data}}{a matrix of original or standardized data that
- has been used for the analysis}
- \item{\code{centers}}{a matrix of class centers}
- \item{\code{cluster}}{an integer vector of length \eqn{n} (\eqn{n}
- is the number of data points each integer indicates the cluster a
- data point belongs to. For the fuzzy cmeans clustering method, a
- data point is assigned to the closest cluster to which the data
- point has highest membership value.}
- \item{\code{membership}}{a matrix with membership values of the
- data points to all the clusters}
+ \item{\code{method}}{clustering method used}
+ \item{\code{dist}}{distance metric used}
+ \item{\code{data}}{a matrix of original or standardized data used
+ in the analysis}
+ \item{\code{centers}}{a matrix of cluster centers}
+ \item{\code{cluster}}{an integer vector of length \eqn{n} (the 
+ integers are the indices of clusters the data points belong to. 
+ For the fuzzy cmeans clustering method, a data point is assigned 
+ to the closest cluster to which the data point has highest 
+ membership value.}
+ \item{\code{membership}}{a matrix of membership values of the
+ data points to each clusters}
 }
+}
+
+\seealso{
+\code{\link{timeclust}}, \code{\link{@}}
 }
 \author{
 Mengjun Wu
 }
-\seealso{
-\code{\link{timeclust}}, \code{\link{@}}
-}
-

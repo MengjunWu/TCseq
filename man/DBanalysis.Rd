@@ -2,39 +2,42 @@
 % Please edit documentation in R/DBanalysis.R
 \name{DBanalysis}
 \alias{DBanalysis}
-\title{Perform differential binding analysis}
+\title{Perform differential expression analysis}
 \usage{
-DBanalysis(object, categories = "timepoint", norm.lib = TRUE,
-  filter.type = NULL, filter.value = NULL, samplePassfilter = 2, ...)
+DBanalysis(
+  object,
+  categories = "timepoint",
+  norm.lib = TRUE,
+  filter.type = NULL,
+  filter.value = NULL,
+  samplePassfilter = 2,
+  ...
+)
 }
 \arguments{
 \item{object}{a \code{TCA} object.}
 
-\item{categories}{character string indicating levels of which
-factor (column in the \code{design} slot) are compared in the
-differential analysis. For time course analysis, the default
-factor is \code{timepoint}'.}
+\item{categories}{character string giving which column in \code{design} 
+will be used for differential analysis. For time course analysis, the default
+column is "\code{timepoint}".}
 
 \item{norm.lib}{logical indicating whether or not use effective
-library size when perform normalization. See 'Details' of
-\code{\link{counts}}}
+library size when perform normalization. See \code{\link{counts}} for more 
+details.}
 
 \item{filter.type}{character string indicating which type of count
-(raw or normalized) is used when doing filtering. Options are
-'\code{raw}', \code{cpm}', '\code{rpkm}', '\code{NULL}'. \code{NULL}'
-means no filtering will be performed.}
+(raw or normalized) is used when performing filtering. Options are
+"\code{raw}", "\code{cpm}", "\code{rpkm}", "\code{NULL}". No filtering will 
+be performed when using "\code{NULL}'.}
 
-\item{filter.value}{A numberic value; if values of selected
-\code{filter.type} ('\code{raw}', \code{cpm}', '\code{rpkm}') of
-a genomic feature are larger than the \code{filter.value} in at
-least a certain number (\code{samplePassfilter}) of
-samples/libraries for any of the conditions, such genomic feature
-will be kept; otherwise the genomic feature will be dropped.}
+\item{filter.value}{a numberic value; minimum values of selected
+\code{filter.type} ("\code{raw}", "\code{cpm}", "\code{rpkm}"). It is used in 
+combination with \code{samplePassfilter}.}
 
-\item{samplePassfilter}{numberic value indicating the least number
-of samples/libraries a genomic feature with counts
-(raw or normalized) more than \code{filter.value} for all conditions
-if such genomic feature will be kept.}
+\item{samplePassfilter}{a numberic value indicating the minimum number
+of samples/libraries in which a genomic feature has counts value 
+(raw or normalized) more than \code{filter.value}. Smaller than this number, 
+the genomic feature will be filtered out.}
 
 \item{...}{additional arguments passed to \code{\link{glmFit}} from
 \code{edgeR} package.}
@@ -43,13 +46,12 @@ if such genomic feature will be kept.}
 A \code{TCA} object
 }
 \description{
-This function performs differetial analysis by fitting read
-counts to a negative binomial generalized linear model.
+This function is wrapper for the \code{\link{glmFit}} in edgeR package.
 }
 \details{
 The differetial event is detected by using the generalized
 linear model (GLM) methods (McCarthy et al, 2012). This function
-fits the read counts of each genes to a negative binomial glms by
+fits the read counts of each genes to a negative binomial glm by
 using \code{\link{glmFit}} function from edgeR. To further test the
 significance of changes, see \code{DBresult}, \code{TopDBresult}
 }
@@ -57,9 +59,6 @@ significance of changes, see \code{DBresult}, \code{TopDBresult}
 data(tca_ATAC)
 tca_ATAC <- DBanalysis(tca_ATAC)
 
-}
-\author{
-Mengjun Wu, Lei Gu
 }
 \references{
 McCarthy,D.J.,Chen, Y., & Smyth, G. K.(2012). Differential
@@ -69,4 +68,6 @@ biological variation. Nucleic acids research 40, 4288-4297.
 \seealso{
 \code{DBresult}, \code{TopDBresult}
 }
-
+\author{
+Mengjun Wu, Lei Gu
+}

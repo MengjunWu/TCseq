@@ -4,17 +4,23 @@
 \alias{peakreference}
 \title{combine and merge multiple BED files}
 \usage{
-peakreference(data = NULL, dir = NULL, pattern = NULL, merge = TRUE,
-  overlap = 1, ratio = NULL)
+peakreference(
+  data = NULL,
+  dir = NULL,
+  pattern = NULL,
+  merge = TRUE,
+  overlap = 1,
+  ratio = NULL
+)
 }
 \arguments{
 \item{data}{a data frame containg coordinates information of peaks
 to be merged. Columns of the data frame should be consistent with
-the BED format where the first column is the name of the chromosome,
-the second column is the starting position and the third column is
+the BED format where the first column contains chromosome information,
+the second column the starting position, and the third column 
 the ending position.}
 
-\item{dir}{character string giving the directory where BED files
+\item{dir}{a character string giving the directory where BED files
 are stored. If \code{data} is not given, the function will reads
 in the BED files under \code{code}.}
 
@@ -36,11 +42,9 @@ a data frame with four columns: \code{chr}, \code{start},
 \code{stop}, \code{id}
 }
 \description{
-This function merges genomic coordinates of a given data frame or
-reads in BED files (e.g. generated from a peak caller) under given
-directory and merge genomic regions that have overlapping genomic
-intervals into a single feature. The single feature represents
-the widest genomic interval that covers all merged regions.
+This function merges overlapping genomic regions into a single feature. 
+The merged single feature represents the widest genomic interval 
+that covers all overlapping regions.
 }
 \details{
 The overlapping ratio (OR) is defined as:
@@ -61,4 +65,3 @@ merged_peaks <- peakreference(data = peaks, merge = TRUE, overlap = 1)
 \author{
 Mengjun Wu, Lei Gu
 }
-

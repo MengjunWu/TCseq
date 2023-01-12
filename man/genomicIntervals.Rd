@@ -4,7 +4,9 @@
 \name{genomicIntervals}
 \alias{genomicIntervals}
 \title{An example reference genomic regions}
-\format{A data frame containing 2751 genomic regions.}
+\format{
+A data frame containing 2751 genomic regions.
+}
 \usage{
 data(genomicIntervals)
 }
@@ -18,4 +20,3 @@ A dataset of exemplary genomic regions
 data(genomicIntervals)
 }
 \keyword{datasets}
-

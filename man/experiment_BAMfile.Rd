@@ -4,8 +4,10 @@
 \name{experiment_BAMfile}
 \alias{experiment_BAMfile}
 \title{An example experiment design with BAM file infomration}
-\format{A data frame containing experiment design information
-for 12 samples/libraries.}
+\format{
+A data frame containing experiment design information
+for 12 samples/libraries.
+}
 \usage{
 data(experiment_BAMfile)
 }
@@ -20,4 +22,3 @@ infomration
 data(experiment_BAMfile)
 }
 \keyword{datasets}
-
