@@ -66,7 +66,7 @@ NULL
 #' An example TCA object
 #'
 #' A TCA object storing exemplary ATAC-seq time course data,
-#' including the experiment design, counts table, reference
+#' including the experiment design, read counts, reference
 #' genomic regions.
 #'
 #' @docType data

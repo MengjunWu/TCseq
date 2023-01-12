@@ -1,25 +1,25 @@
 #' clust class
 #'
-#'\code{clust} is a S4 class for storing results of a clustering
-#'analysis for time course data.
+#'\code{clust} is a S4 class for storing results of the clustering
+#'analysis of time course data.
 #'
 #'@section Slots:
-#'Oject of this class contains the following slots:
+#'Object of \code{clust} class contains the following slots:
 #'\describe{
-#'  \item{\code{method}}{clustering method that has been used}
-#'  \item{\code{dist}}{distance method that has been used}
-#'  \item{\code{data}}{a matrix of original or standardized data that
-#'  has been used for the analysis}
-#'  \item{\code{centers}}{a matrix of class centers}
-#'  \item{\code{cluster}}{an integer vector of length \eqn{n} (\eqn{n}
-#'  is the number of data points each integer indicates the cluster a
-#'  data point belongs to. For the fuzzy cmeans clustering method, a
-#'  data point is assigned to the closest cluster to which the data
-#'  point has highest membership value.}
-#'  \item{\code{membership}}{a matrix with membership values of the
-#'  data points to all the clusters}
+#'  \item{\code{method}}{clustering method used}
+#'  \item{\code{dist}}{distance metric used}
+#'  \item{\code{data}}{a matrix of original or standardized data used
+#'  in the analysis}
+#'  \item{\code{centers}}{a matrix of cluster centers}
+#'  \item{\code{cluster}}{an integer vector of length \eqn{n} (the 
+#'  integers are the indices of clusters the data points belong to. 
+#'  For the fuzzy cmeans clustering method, a data point is assigned 
+#'  to the closest cluster to which the data point has highest 
+#'  membership value.}
+#'  \item{\code{membership}}{a matrix of membership values of the
+#'  data points to each clusters}
 #'}
-#'@details:
+#'@details
 #'The clust objects are returned from \code{\link{timeclust}} and have
 #'a show method printing a compact summary of their contents
 #'
@@ -89,24 +89,24 @@ setValidity("TCA", function(object) {
 #'TCA class and constructor
 #'
 #'\code{TCA} is a S4 class for storing input data, results of
-#'differential binding and clustering analysis. A \code{TCA} object
-#'can be created by the constructor function from a table of sample
-#'information, a table genomic coordinates of features, read
-#'counts(optional).
+#'differential analysis and clustering analysis. A \code{TCA} object
+#'can be created by the constructor function taking a table of sample
+#'information, a table of the genomic coordinates of features, and read
+#'count table (optional).
 #'
-#'@param design a data frame containing information about
-#'samples/libraries, For time course analysis, design should contain
-#'at least three columns (case insensitive): \code{sampleid},
+#'@param design a data frame containing information of
+#'samples/libraries. For time course analysis, design table should 
+#'contain at least three columns (case insensitive): \code{sampleid},
 #'\code{timepoint} and \code{group} providing time point and group
 #'information of each sample/library. If \code{counts} is not provided
-#'when creating \code{TCA} object, the column \code{BAMfile} can be
-#'included in the \code{design} data frame, providing corresponding
-#'BAM filename of each sample/library, this information can be used
-#'for generating count table by using
-#'\code{\link{countReads}} function.
+#'when creating \code{TCA} object, an optional column \code{bamfile} can 
+#'be used to provide BAM filename of each sample/library and generate 
+#'count table using \code{\link{countReads}} function later.
 #'
 #'@param counts an integer matrix containing read counts. Rows
-#'correspond to genomic features and columns to samples/libraries.
+#'correspond to genomic features and columns to samples/libraries. 
+#'The name of column s should be the same as the time points 
+#'in \code{design}. 
 #'
 #'@param genomicFeature a data frame or a GRanges object containing
 #'genomic coordinates of features of interest (e.g. genes in RNA-seq,
@@ -115,13 +115,13 @@ setValidity("TCA", function(object) {
 #'\code{chr}, \code{start}, \code{end}; if genomicFeature is a Granges
 #'object, the metadata column "\code{id}" is required. For
 #'\code{TCAFromSummarizedExperiment}, genomicFeature must be
-#'provided if se is a SummarizedExperiment object.
+#'provided if \code{se} is a SummarizedExperiment object.
 #'
 #'
 #'@param se A SummarizedExperiment or a RangedSummarizedExperiment
-#'object. The object might contain multiple assays (count table)
-#'in the assay list, only the first one will be taken to construct
-#'TCA object. For SummarizedExperiment object, \code{genomicFeature}
+#'object. The object might contain multiple assays in the assay list, 
+#'only the first one will be taken to construct TCA object. 
+#'For SummarizedExperiment object, \code{genomicFeature}
 #'must be provided while for RangedSummarizedExperiment object,
 #'the genomic features will be extracted directly from the object.
 #'
@@ -133,10 +133,12 @@ setValidity("TCA", function(object) {
 #'
 #'@details A TCA object can be created without providing read counts,
 #'read counts can be provided by \code{\link{counts}} or generated by
-#'\code{\link{countReads}}, the number of rows should equal to that in
-#'\code{genomicFeature} and the number of columns should equal to number
-#'of rows in \code{design}. Input data and analysis results in a TCA
-#'object can be accessed by using corresponding accessors and functions.
+#'\code{\link{countReads}}. For the read counts, the number of rows 
+#'should equal to that in '\code{genomicFeature} and the number of columns 
+#'should equal to number of rows in \code{design}; in addition, the name 
+#'of column names should be the same as the time points in \code{design}. 
+#'Input data and analysis results in a TCA object can be accessed by using 
+#'corresponding accessors and functions.
 #'The TCA objects also have a show method printing a compact summary of
 #'their contents see \code{\link{counts}}, \code{\link{TCA.accessors}},
 #'\code{\link{DBresult}}, \code{\link{tcTable}}, \code{\link{timeclust}}.
@@ -239,12 +241,7 @@ TCA <- function(design, counts = matrix(0L, 0L, 0L), genomicFeature,
     err <- paste0("One or more following required fields in design are missing: 'sampleid', 'timepoint', 'group', check if the columns are correctly named or if the corresponding information is provided.")
     stop(err)
   }
-  if (!sum(c("sampleid", "timepoint", "group") %in%
-           colnames(design)) == 3) {
-    colnames(design) <- tolower(colnames(design))
-    warning("colnames of design are all forced to lowercase.")
-  }
-
+  colnames(design) <- tolower(colnames(design))
   object <- new("TCA", design = design, counts = counts,
                 genomicFeature = genomicFeature)
   object

@@ -1,25 +1,29 @@
 #' time couse data clustering
 #'
-#' This function performs clustering analysis of time course data.
+#' This function performs clustering analysis of the time course data.
 #'
 #' @param x a \code{TCA} object returned from
 #' \code{\link{timecourseTable}} or a matrix
 #'
-#' @param algo character string giving a clustering method. Options
-#' are \code{km}' (kmeans), '\code{pam}' (partitioning around medoids),
-#' '\code{hc}' (hierachical clustering), '\code{cm}' (cmeans).
+#' @param algo a character string giving a clustering method. Options
+#' are "\code{km}" (kmeans), "\code{pam}" (partitioning around medoids),
+#' "\code{hc}" (hierachical clustering), "\code{cm}" (cmeans).
 #'
-#' @param k numeric value between \eqn{1} and \eqn{n - 1} ( \eqn{n}
-#' is the number of data points to be clustered ).
-#'
-#' @param dist character string specifying method for
-#' distance(dissimilarity) calculation. It should be one of
-#' '\code{correlation}' or one of the distance measure method in
-#' \code{\link{dist}} function (for example '\code{euclidean}',
-#' '\code{manhattan}')
+#' @param k a numeric value between \eqn{1} and \eqn{n - 1} (\eqn{n}
+#' is the number of data points to be clustered).
+#' 
+#' @param dist a character string specifying either "\code{distance}" or 
+#' "\code{correlation}" will be used to measure the distance between data points.
+#' 
+#' @param dist.method a character string. It can be chosen from one of 
+#' the correlation methods in \code{\link{cor}} function ("\code{pearson}", 
+#' "\code{spearman}", "\code{kendall}") if \code{dist} is "\code{correlation}", 
+#' or one of the distance measure methods in \code{\link{dist}} function 
+#' (for example, "\code{euclidean}", "\code{manhattan}") if \code{dist} is 
+#' "\code{distance}".
 #'
 #' @param centers a numeric matrix giving intial centers for kmeams,
-#' pam or cmeans. If given, Number of rows of centers must be equal
+#' pam or cmeans. If given, number of rows of the matrix must be equal
 #' to k.
 #'
 #' @param standardize logical, if TRUE, z-score transformation will
@@ -31,28 +35,27 @@
 #' @details
 #' two types of clustering methods are provided: hard clustering
 #' (\code{\link{kmeans}}, \code{\link{pam}}, \code{\link{hclust}})
-#' and soft clustering(\code{\link{cmeans}}). In Hard clustering,
+#' and soft clustering(\code{\link{cmeans}}). In hard clustering,
 #' a data point can only be allocated to exactly one cluster
 #' (for \code{\link{hclust}}, \code{\link{cutree}} is used to cut
 #' a tree into clusters), while in soft clustering (also known as
 #' fuzzy clustering), a data point can be assigned to multiple
 #' clusters, membership values are used to indicate to what
-#' degree a data point belongs to each cluster. For more details,
-#' see the help() page of each function.
+#' degree a data point belongs to each cluster.
 #'
-#' To avoid the influence of expression level to the clustering
-#' analysis, z-score transformation can be applied to covert the
-#' expression values to z-scores by performing the following formula:
+#' To better capture the differences of temporal patterns rather 
+#' than expression levels, z-score transformation can be applied 
+#' to covert the the expression values to z-scores by performing 
+#' the following formula:
 #'
 #' \deqn{z = \frac{x - \mu}{\sigma}}
 #'
-#' \eqn{x} is value to be converted (e.g., a expression value of a
+#' \eqn{x} is the value to be converted (e.g., expression value of a
 #' genomic feature in one condition), \eqn{\mu} is the population
-#' mean (e.g., average expression value of a genomic feature in
+#' mean (e.g., average expression value of a genomic feature across
 #' different conditions), \eqn{\sigma} is the standard deviation
-#' (e.g., standard deviation of expression of a genomic feature
-#' in different conditions).
-#'
+#' (e.g., standard deviation of the expression values of a genomic 
+#' feature across different conditions).
 #'
 #'
 #' @return
@@ -61,10 +64,11 @@
 #'
 #' @examples
 #'
-#' x <- matrix(rnorm(1600,sd=0.3), nrow = 200,
+#' example.mat <- matrix(rnorm(1600,sd=0.3), nrow = 200,
 #'             dimnames = list(paste0('peak', 1:200), 1:8))
-#' clust_res <- timeclust(x, algo = 'cm', k = 4) # return a clust object
-#'
+#' clust_res <- timeclust(x = example.mat, algo = 'cm', k = 4) 
+#' # return a clust object
+#' 
 #' @author
 #' Mengjun Wu
 #'
@@ -72,33 +76,28 @@
 #' \code{\link{pam}}, \code{\link{hclust}}, \code{\link{cutree}}
 #'
 #' @export
-timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
-                      standardize = TRUE, ...) {
-  if (class(x) != "matrix") {
-    if(class(x) != "TCA"){
-      stop("x should be a numeric matrix or a 'TCA' object")
-    }
-  }
-  if (class(x) == "matrix") {
-    data <- x
-  }
-  if (class(x) == "TCA") {
-    data <- x@tcTable
+timeclust <- function(x, algo, k, dist = "distance", dist.method = "euclidean", 
+                      centers = NULL, standardize = TRUE, ...) {
+  if (is.matrix(x)) {
+    data.tmp <- x
+  }else{
+    data.tmp <- x@tcTable
   }
   if (standardize) {
-    for (i in seq_len(nrow(data))) {
-      data[i, ] <- (data[i, ] - mean(data[i, ], na.rm = TRUE))/sd(data[i, ], na.rm = TRUE)
+    for (i in seq_len(nrow(data.tmp))) {
+      data.tmp[i, ] <- (data.tmp[i, ] - mean(data.tmp[i, ], na.rm = TRUE))/sd(data.tmp[i, ], na.rm = TRUE)
     }
-    data <- data[complete.cases(data), ]
+    data.tmp <- data.tmp[complete.cases(data.tmp), ]
   }
   object <- new("clust")
   object@method <- algo
   object@dist <- dist
-  object@data <- data
-
-  res <- .timeclust(data = data, algo = algo, k = k, dist = dist,
+  object@data <- data.tmp
+  
+  res <- .timeclust(data = data.tmp, algo = algo, k = k, 
+                    dist = dist, dist.method = dist.method,
                     centers = centers, ...)
-
+  
   if (algo == "cm") {
     object@cluster <- res$cluster
     object@membership <- res$membership
@@ -107,7 +106,7 @@ timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
     object@cluster <- res$cluster
     object@centers <- res$centers
   }
-  if (class(x) == "matrix") {
+  if (is.matrix(x)) {
     object
   } else {
     x@clusterRes <- object
@@ -117,27 +116,36 @@ timeclust <- function(x, algo, k, dist = "euclidean", centers = NULL,
 
 # perform time course clustering
 .timeclust <- function(data, algo, k, centers = NULL,
-                       dist = "euclidean", ...) {
+                       dist = "distance", dist.method = "euclidean", ...) {
   if (!algo %in% c("pam", "km", "hc", "cm")) {
     stop("clustering method should be one of 'pam','km','hc','cm'")
   }
-  if (!dist %in% c("correlation", "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski")) {
-    stop("Distance metric should be 'correlation', or one of the distance measures in dist function")
+  if (!dist %in% c("distance", "correlation")) {
+    stop("Distance can only be one of either 'distance' or 'correlation'")
   }
-  if (algo == "km" && dist != "euclidean") {
-    stop("kmeans only support euclidean metric; for other distance metrices, please see the help page")
+  if (!dist.method %in% c("pearson", "kendall", "spearman", "euclidean", "maximum", 
+                          "manhattan", "canberra", "binary", "minkowski")) {
+    stop("Distance metric should either one of correlation measures in cor function or 
+         one of the distance measures in dist function")
   }
-  if (algo == "cm" && !dist %in% c("euclidean", "manhattan")) {
-    stop("cmeans only support euclidean or mahattan distance metrics")
+  if (algo == "km") {
+    if(dist != "euclidean"){
+      stop("kmeans only support euclidean metric; for other distance metrices, please see the help page")
+    }
   }
-
+  if (algo == "cm" ) {
+    if(!dist %in% c("euclidean", "manhattan")){
+      stop("cmeans only support euclidean or mahattan distance metrics")
+    }
+  }
+  
   d <- NULL
   if (algo %in% c("pam", "hc")) {
     if (dist == "correlation") {
-      d <- as.dist(1 - cor(t(data)))
+      d <- as.dist(1 - cor(t(data), method = dist.method))
     }
-    if (dist != "correlation") {
-      d <- dist(data, method = dist)
+    if (dist == "distance") {
+      d <- dist(data, method = dist.method)
     }
   }
   clustres <- list()

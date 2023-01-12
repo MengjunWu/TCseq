@@ -47,29 +47,29 @@ counts.TCA <- function(object, normalization = "none", lib.norm = TRUE,
 
 #' Extracts counts of a TCA object.
 #'
-#' \code{counts} extract raw read counts stored in a \code{TCA} object or
-#' compute normalized counts.
+#' \code{counts} extract raw read counts  stored in a \code{TCA} object 
+#' or compute normalized counts from the raw counts.
 #'
 #' @name counts
 #' @aliases counts counts,TCA-method counts<-,TCA-method
-#' @param object a \code{TCA} object
+#' @param object a \code{TCA} object.
 #'
 #' @param normalization character string giving the normalization method.
-#' Options are '\code{none}' (original raw counts), '\code{cpm}' (counts
+#' Options are "\code{none}" (original raw counts), "\code{cpm}" (counts
 #' per million),
-#' '\code{rpkm}' (reads per kilobase per million).
+#' "\code{rpkm}" (reads per kilobase per million).
 #'
 #' @param lib.norm logical indicating whether or not use effective library
-#' size (see 'Details' below) when \code{normalization} is '\code{cpm}' or
-#' '\code{rpkm}'.
+#' size (see Details below) when \code{normalization} is "\code{cpm}" or
+#' "\code{rpkm}".
 #'
 #' @param log logical if \code{TRUE}, the returned value will be on a log2
 #' scale.
 #'
-#' @param value an integer matrix
+#' @param value an integer matrix.
 #'
 #' @param ... additional arguments passed to \code{\link{cpm}} or
-#' \code{\link{rpkm}}
+#' \code{\link{rpkm}} in the edgeR package.
 #'
 #' @details when calculating normalized counts, library size can be rescaled
 #' to minimize the log-fold changes between samples for most genomic features
@@ -78,9 +78,10 @@ counts.TCA <- function(object, normalization = "none", lib.norm = TRUE,
 #' factor is calculated using the weighted trimmed mean of M-values (TMM,
 #' Robinson et al (2010))
 #'
-#' If log2 values are computed, a small count would be added to avoid logarithm
-#' of zero. a small count is set proportional to the library size, the average
-#' value of such small counts of all libraries counts is set to 0.25 by default.
+#' If log2 values are computed, a small count would be added to avoid logarithm 
+#' of zero. The actual added count will be scaled according to the library size,
+#' for details see \code{\link{addPriorCount}} in the edgeR package
+#' when not specified, the prior count is set to 0.25 by default.
 #'
 #' @references
 #' Robinson, M. D., & Oshlack, A. (2010). A scaling normalization method for
@@ -180,15 +181,15 @@ setMethod("clustResults", "TCA", function(object) {
 
 #' Accessors to extract slots of a clust class.
 #'
-#' Accessors are provided to extract \code{data}, \code{centers}, \code{cluster},
-#' \code{membership}, \code{membership} slots of a clust class.
+#' Accessors are provided to extract \code{data}, \code{centers}, \code{cluster}, 
+#' and \code{membership} slots stored in a clust class.
 #' @name clust.accessors
 #' @aliases clustData clustData,clust-method clustCenters,clust-method
 #' clustCluster,clust-method clustMembership,clust-method
 #'
 #' @param object \code{clust} object object
 #' @return
-#' \code{clustData} returns data matrix. \code{clustCenters} returns a matrix of
+#' \code{clustData} returns a data matrix. \code{clustCenters} returns a matrix of
 #' centers. \code{clustCluster} returns an integer vector. \code{clustMembership}
 #' returns a matrix of membership, see \code{\link{clust}} for details.
 #'

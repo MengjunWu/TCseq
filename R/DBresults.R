@@ -1,15 +1,12 @@
-#' This function performs differetial analysis by fitting read
-#' Perform likelihood ratio tests and extract the differential
-#' analysis results
+#' This function tests for differential expression 
 #'
-#' This function performs likelihood ratio tests for given
-#' coefficinets contrasts after fitting read counts to GLM by
-#' \code{\link{DBanalysis}}. \code{DBresult} extracts the
-#' diffential analysis results of given contrasts for all
-#' genomic features or genomic features with significant
-#' differential events. \code{DBresult.cluster} returns similar
-#' results while the results only contain genomic features belong
-#' to a given cluster.
+#' This function is a wrapper for \code{\link{glmLRT}} in edgeR package. 
+#' It performs likelihood ratio tests for given coefficinets contrasts 
+#' after fitting read counts to a negative binomial glm by
+#' \code{\link{DBanalysis}}. \code{DBresult} also extracts the
+#' diffential analysis results of given contrasts at a chosen significance level. 
+#' \code{DBresult.cluster} returns similar results but only 
+#' contain genomic features belong to a given cluster.
 #'
 #' @name DBresult
 #'
@@ -18,46 +15,48 @@
 #' for \code{DBresult.cluster}, both \code{DBanalysis} and
 #' \code{timeclust} should be already called.
 #'
-#' @param group1 character string giving the level to be compared,
-#' that is the denominator in the fold changes.
+#' @param group1 character string giving the group to be compared with,
+#' i.e., the denominator in the fold changes.
 #'
-#' @param group2 a character vetor giving other levels to compared
-#' with \code{group1}. that are numerator in the fold changes.
+#' @param group2 a character vetor giving the other groups to 
+#' compare with \code{group1}, i.e., the numerator in the fold changes.
 #'
-#' @param contrasts a character vector, each charcter string in
+#' @param contrasts a character vector, each string in
 #' the vector gives a contrast of two groups with the format
-#' group2vsgroup1', group1 is the denominator level in the fold
+#' "group2vsgroup1", group1 is the denominator level in the fold
 #' changes and group2 is the numerator
 #' level in the fold changes.
 #'
 #' @param p.adjust character string specifying a correction method
-#' for p-values. Options are 'holm', hochberg', 'hommel',
-#' 'bonferroni', BH', 'BY', 'fdr', 'none'.
+#' for p-values. Options are "\code{holm}", "\code{hochberg}", 
+#' "\code{hommel}", "\code{bonferroni}", "\code{BH}", "\code{BY}", 
+#' "\code{fdr}", and "\code{none}". 
 #'
 #' @param top.sig logical if TRUE, only genomic regions with
-#' significant differential events will are returned. Significant
-#' differential events are defined by log2-fold changes,p-values or
-#' adjusted p-values.
-#'
+#' given log2-fold changes and significance levels (p-value) 
+#' will be returned. Log2-fold changes are defined by \code{abs.fold}
+#' and \code{direction}; significance levels are defined by \code{pvalue} 
+#' and \code{pvalue.threshold}
+#'  
 #' @param pvalue character string specify the type of p-values
-#' used to define significant differential events('\code{PValue}'
-#' or adjusted p-value 'paj')
+#' used for defining the significance level(\code{PValue}
+#' or adjusted p-value \code{paj})
 #'
 #' @param pvalue.threshold a numeric value giving threshold of
-#' selected p-value, Significant differential events have lower
-#' (ajusted) p-values than the threshold.
+#' selected p-value, Significant changes have lower
+#' (adjusted) p-values than the threshold.
 #'
-#' @param abs.fold a numeric value, the least absolute log2-fold
-#' changes
+#' @param abs.fold a numeric value, the minimum absolute log2-fold
+#' changes. The returned genomic regions have changes 
+#' with absolute log2-fold changes exceeding \code{abs.fold}.
 #'
 #' @param direction character string specify the direction of fold
-#' changes ('\code{up}' (positive fold changes), \code{down}'
-#' (negative fold changes), \code{both}'(both positive and
-#' negative fold changes)). Significant events have log2-fold
-#' changes exceeding \code{abs.fold} in defined directions.
+#' changes. "\code{up}": positive fold changes; "\code{down}":
+#' negative fold changes; "\code{both}": both positive and
+#' negative fold changes.  
 #'
-#' @param cluster an integer, the result tables of genomic features
-#' belong to the \code{cluster} are extracted.
+#' @param cluster an integer giving the number of cluster from which 
+#' genomic features are extracted.
 #'
 #' @param  cmthreshold a numeric value, this argument is applicable
 #' only if \code{cmeans}' clustering method is selected when calling
@@ -70,7 +69,7 @@
 #' value. Options are "GRangesList" and "list".
 #'
 #' @details This function uses \code{\link{glmLRT}} from edgeR which
-#' perform likelihood ratio tests for testing significance of changes.
+#' perform likelihood ratio tests for the significance of changes.
 #' For more deatils,
 #' see \code{\link{glmLRT}}
 #'
@@ -79,38 +78,36 @@
 #'
 #' @return
 #' A list or a GRangesList.
-#' If \code{result.type} is "GRangesList", a GRangesList is returned
-#' containing the differential analysis results for all provided contrasts.
-#' Each GRanges object of the list is one contrast, the analysis results
-#' are contained in 4 metadata columns:
+#' If \code{result.type} is "GRangesList", a GRangesList is returned containing
+#' the differential analysis results for all provided contrasts. Each GRanges 
+#' object of the list is one contrast, the analysis results are contained in 4 
+#' metadata columns:
 #'
-#' @return \code{logFC} log2-fold changes of differential event between
-#' two tested.
-#'
-#' @return \code{PValue} p-values.
-#'
-#' @return \code{paj} adjusted p-values
-#'
-#' @return \code{id} genomic feature name
-#'
-#' If \code{result.type} is "list", a List of data frames is returned.
-#' Each data frame is one contrast and contains the following columns:
-#'
-#' @return \code{logFC} log2-fold changes of differential event between
-#' two tested.
+#' @return \code{logFC} log2-fold changes between two groups.
 #'
 #' @return \code{PValue} p-values.
 #'
 #' @return \code{paj} adjusted p-values
 #'
-#' @return \code{chr}  name of the chromosomes
+#' @return \code{id} name of genomic features 
 #'
-#' @return \code{start} starting position of the feature in the
-#' chromosome
+#' If \code{result.type} is "list", a list of data frames is returned.
+#' Each data frame contains one contrast with the following columns:
 #'
-#' @return \code{end} ending postition of the feature in the chromosome
+#' @return \code{logFC} log2-fold changes between two groups.
 #'
-#' @return \code{id} genomic feature name
+#' @return \code{PValue} p-values.
+#'
+#' @return \code{paj} adjusted p-values
+#'
+#' @return \code{chr}  name of chromosomes 
+#'
+#' @return \code{start} starting positions of features in the 
+#' chromosomes
+#'
+#' @return \code{end} ending postitions of features in the chromosomes
+#'
+#' @return \code{id} name of genomic features
 #'
 #' @author
 #' Mengjun Wu, Lei Gu
