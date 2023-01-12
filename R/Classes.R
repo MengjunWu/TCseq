@@ -238,10 +238,15 @@ TCA <- function(design, counts = matrix(0L, 0L, 0L), genomicFeature,
 
   if (!sum(c("sampleid", "timepoint", "group") %in%
            tolower(colnames(design))) == 3) {
-    err <- paste0("One or more following required fields in design are missing: 'sampleid', 'timepoint', 'group', check if the columns are correctly named or if the corresponding information is provided.")
+    err <- paste0("One or more following required fields in 'design' are missing: 'sampleid', 
+                  'timepoint', 'group', check if the columns are correctly named or if the corresponding information is provided.")
     stop(err)
   }
   colnames(design) <- tolower(colnames(design))
+  if(class(design$timepoint != "character")){
+    design$timepoint <- as.character(design$timepoint)
+    warning("time points in 'design' are not characters, converted to characters")
+  }
   object <- new("TCA", design = design, counts = counts,
                 genomicFeature = genomicFeature)
   object
