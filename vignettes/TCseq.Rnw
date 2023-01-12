@@ -16,7 +16,7 @@
 \SweaveOpts{concordance=TRUE}
 \maketitle
 
-The TCseq package provides a unified suite for analysis of different types of time course sequencing data. It can be applied to transcriptome time course data such as RNA-seq as well as epigenome time course data such as ATAC-seq, ChIP-seq. The main focuses of this package are on differential analysis between different time points and temporal pattern analysis and visualization.
+The TCseq package provides a unified suite for analysis of different types of time course sequencing data. It can be applied to transcriptomic time course data such as RNA-seq as well as epigenomic time course data such as ATAC-seq, ChIP-seq. The main focuses of this package are on differential analysis between different time points and temporal pattern analysis and visualization.
 
 Unlike RNA-seq,  the genomic regions of interest of sequencing data like ATAC-seq, ChIP-seq are not pre-defined and are specific to each experimental conditions, which limits the subsequential differential analysis between conditions. For those data type, the TCseq package provides functions to combine and merge conditionally specific genomic regions and generate a reference genomic regions for all conditions. This package then uses the negative binomial generalized linear model implemented in edgeR to provide differential analysis \cite{Robinson}. To capture the temporal patterns of the time course data, the package includes several unsupervised clustering methods to identify and a function to visualize the patterns.
 
