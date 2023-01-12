@@ -1,42 +1,37 @@
-#' Perform differential binding analysis
+#' Perform differential expression analysis
 #'
-#' This function performs differetial analysis by fitting read
-#' counts to a negative binomial generalized linear model.
+#' This function is wrapper for the \code{\link{glmFit}} in edgeR package.
 #'
 #' @param object a \code{TCA} object.
 #'
-#' @param categories character string indicating levels of which
-#' factor (column in the \code{design} slot) are compared in the
-#' differential analysis. For time course analysis, the default
-#' factor is \code{timepoint}'.
+#' @param categories character string giving which column in \code{design} 
+#' will be used for differential analysis. For time course analysis, the default
+#' column is "\code{timepoint}".
 #'
 #' @param norm.lib logical indicating whether or not use effective
-#' library size when perform normalization. See 'Details' of
-#' \code{\link{counts}}
+#' library size when perform normalization. See \code{\link{counts}} for more 
+#' details.
 #'
 #' @param filter.type character string indicating which type of count
-#' (raw or normalized) is used when doing filtering. Options are
-#' '\code{raw}', \code{cpm}', '\code{rpkm}', '\code{NULL}'. \code{NULL}'
-#' means no filtering will be performed.
+#' (raw or normalized) is used when performing filtering. Options are
+#' "\code{raw}", "\code{cpm}", "\code{rpkm}", "\code{NULL}". No filtering will 
+#' be performed when using "\code{NULL}'.
 #'
-#' @param filter.value A numberic value; if values of selected
-#' \code{filter.type} ('\code{raw}', \code{cpm}', '\code{rpkm}') of
-#' a genomic feature are larger than the \code{filter.value} in at
-#' least a certain number (\code{samplePassfilter}) of
-#' samples/libraries for any of the conditions, such genomic feature
-#' will be kept; otherwise the genomic feature will be dropped.
+#' @param filter.value a numberic value; minimum values of selected
+#' \code{filter.type} ("\code{raw}", "\code{cpm}", "\code{rpkm}"). It is used in 
+#' combination with \code{samplePassfilter}.
 #'
-#' @param samplePassfilter numberic value indicating the least number
-#' of samples/libraries a genomic feature with counts
-#' (raw or normalized) more than \code{filter.value} for all conditions
-#' if such genomic feature will be kept.
+#' @param samplePassfilter a numberic value indicating the minimum number
+#' of samples/libraries in which a genomic feature has counts value 
+#' (raw or normalized) more than \code{filter.value}. Smaller than this number, 
+#' the genomic feature will be filtered out.
 #'
 #' @param ... additional arguments passed to \code{\link{glmFit}} from
 #' \code{edgeR} package.
 #'
 #' @details The differetial event is detected by using the generalized
 #' linear model (GLM) methods (McCarthy et al, 2012). This function
-#' fits the read counts of each genes to a negative binomial glms by
+#' fits the read counts of each genes to a negative binomial glm by
 #' using \code{\link{glmFit}} function from edgeR. To further test the
 #' significance of changes, see \code{DBresult}, \code{TopDBresult}
 #'
