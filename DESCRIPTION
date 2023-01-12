@@ -1,7 +1,7 @@
 Package: TCseq
 Type: Package
 Title: Time course sequencing data analysis
-Version: 1.6.1
+Version: 1.23.1
 Author: Mengjun Wu <minervajunjun@gmail.com>, Lei Gu <leigu@broadinstitute.org>
 Maintainer: Mengjun Wu <minervajunjun@gmail.com>
 Description: Quantitative and differential analysis of epigenomic and
@@ -16,5 +16,4 @@ Imports: edgeR, BiocGenerics, reshape2, GenomicRanges, IRanges,
 Suggests: testthat
 biocViews: Epigenetics, TimeCourse, Sequencing, ChIPSeq, RNASeq,
     DifferentialExpression, Clustering, Visualization
-RoxygenNote: 5.0.1
-
+RoxygenNote: 7.2.3
