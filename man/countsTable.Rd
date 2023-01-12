@@ -4,8 +4,10 @@
 \name{countsTable}
 \alias{countsTable}
 \title{An example read Counts table}
-\format{A data frame containing experiment design information
-for 12 samples/libraries.}
+\format{
+A data frame containing experiment design information
+for 12 samples/libraries.
+}
 \usage{
 data(countsTable)
 }
@@ -19,4 +21,3 @@ A dataset of exemplary read counts
 data(countsTable)
 }
 \keyword{datasets}
-

@@ -4,18 +4,16 @@
 \alias{countReads}
 \title{count mapped reads overlap genomic intervals}
 \usage{
-countReads(object, dir, method = "summarizeoverlaps", zero.based = TRUE,
-  ...)
+countReads(object, dir, method = "summarizeoverlaps", zero.based = TRUE, ...)
 }
 \arguments{
-\item{object}{a \code{TCA} object}
+\item{object}{a \code{TCA} object.}
 
-\item{dir}{character string giving the directory where BAM files
-are stored.}
+\item{dir}{character string giving the directory of BAM files.}
 
 \item{method}{character string giving the counting method. Options
-are '\code{summarizeOverlaps}' and '\code{featureCounts}'. For
-Windows system, only '\code{summarizeOverlaps}' can be used, For
+are "\code{summarizeOverlaps}" and "\code{featureCounts}". For
+Windows system, only "\code{summarizeOverlaps}" can be used, For
 Linux system, both methods can be used.}
 
 \item{zero.based}{Logical. If TRUE, the start positions of the
@@ -23,34 +21,32 @@ genomic intervals are \emph{0-based}, if FALSE, the start positions
 will be \emph{1-based}.}
 
 \item{...}{additional arguments passed to
-\code{\link{summarizeOverlaps}} and \code{featureCounts} in
-\code{Rsubread} package}
+\code{\link{summarizeOverlaps}} in GenomicAlignments package 
+or \code{\link{featureCounts}} in Rsubread package.}
 }
 \value{
-A TCA object with updated '\code{count}' slot.
+A TCA object with updated \code{count} slot.
 }
 \description{
-This function counts mapped reads from multiple BAM files that
-overlap genomic intervals in \code{genomicFeature} in a \code{TCA}
-object. The counting result is stored in '\code{count}' slot of
-the \code{TCA} object.
+This function counts mapped reads from multiple BAM files 
+overlapping genomic intervals in \code{genomicFeature} in a 
+\code{TCA} object. The resulted count table is stored in 
+\code{count} slot of the \code{TCA} object.
 }
 \details{
-This function provides two options '\code{summarizeOverlaps}' from
-GenomicAlignments package and \code{featureCounts}' from Rsubread
-package to count the aligned reads. As Rsubread package is only
-avaible for linux systems, Windows users can only use
-'\code{summarizeOverlaps}'. The user could specify counting details
-by passing additional arguments (...), otherwise the default
-settings of the two methods are used. For counting details, see
-\code{\link{summarizeOverlaps}}, \code{featureCounts} in
-\code{Rsubread} package
+This function provides two options to count the mapped reads: 
+"\code{summarizeOverlaps}" in the GenomicAlignments package and 
+"\code{featureCounts}" in the Rsubread package. As Rsubread package 
+is only avaible for linux systems, Windows users can only choose
+"\code{summarizeOverlaps}". The user could further customize the 
+counting paramters by passing additional arguments (...), otherwise 
+the default settings of the two methods will be used. For details 
+of the counting parameters, see \code{\link{summarizeOverlaps}}, 
+\code{featureCounts}.
+}
+\seealso{
+\code{\link{summarizeOverlaps}}, \code{\link{featureCounts}}
 }
 \author{
 Mengjun Wu
 }
-\seealso{
-\code{\link{summarizeOverlaps}}, \code{featureCounts} in
-\code{Rsubread} package
-}
-

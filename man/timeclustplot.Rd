@@ -4,11 +4,20 @@
 \alias{timeclustplot}
 \title{Plot clustering results for time course data.}
 \usage{
-timeclustplot(object = NULL, categories = "timepoint",
-  value = "expression", cols = NULL, cl.color = "gray50",
+timeclustplot(
+  object = NULL,
+  categories = "timepoint",
+  value = "expression",
+  cols = NULL,
+  cl.color = "gray50",
   membership.color = rainbow(30, s = 3/4, v = 1, start = 1/6),
-  title.size = 18, axis.line.size = 0.6, axis.title.size = 18,
-  axis.text.size = 16, legend.title.size = 14, legend.text.size = 14)
+  title.size = 18,
+  axis.line.size = 0.6,
+  axis.title.size = 18,
+  axis.text.size = 16,
+  legend.title.size = 14,
+  legend.text.size = 14
+)
 }
 \arguments{
 \item{object}{a \code{TCA} object or a \code{clust} object}
@@ -69,4 +78,3 @@ print (p[[3]]) # plot cluster 3
 \author{
 Mengjun Wu
 }
-

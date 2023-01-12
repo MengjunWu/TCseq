@@ -4,7 +4,9 @@
 \name{tca_ATAC}
 \alias{tca_ATAC}
 \title{An example TCA object}
-\format{A TCA object of exemplary ATAC-seq time course data}
+\format{
+A TCA object of exemplary ATAC-seq time course data
+}
 \usage{
 data(tca_ATAC)
 }
@@ -13,11 +15,10 @@ A TCA object
 }
 \description{
 A TCA object storing exemplary ATAC-seq time course data,
-including the experiment design, counts table, reference
+including the experiment design, read counts, reference
 genomic regions.
 }
 \examples{
 data(tca_ATAC)
 }
 \keyword{datasets}
-

@@ -4,8 +4,10 @@
 \name{experiment}
 \alias{experiment}
 \title{An example experiment design without BAM file infomration}
-\format{A data frame containing experiment design information
-for 12 samples/libraries.}
+\format{
+A data frame containing experiment design information
+for 12 samples/libraries.
+}
 \usage{
 data(experiment)
 }
@@ -20,4 +22,3 @@ infomration
 data(experiment)
 }
 \keyword{datasets}
-
