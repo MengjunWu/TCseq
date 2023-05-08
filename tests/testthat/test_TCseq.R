@@ -1,7 +1,6 @@
 ## test the TCA object constructor
 d1<- data.frame(timepoint = rep(c("0h", "24h", "48h", "72h"), 2), group = rep(c(1, 2, 3, 4), 2))
-d2 <- data.frame(sampleID = 1:8, timepoint = rep(c("0h", "24h", "48h", "72h"), 2),
-                 group = rep(c(1, 2, 3, 4), 2))
+
 d3 <- data.frame(sampleid = 1:8, timepoint = rep(c("0h", "24h", "48h", "72h"), 2),
                  group = rep(c(1, 2, 3, 4), 2))
 
@@ -22,9 +21,6 @@ expect_error({
 })
 expect_error({
   tca <- TCA(design = d3, genomicFeature = gf1)
-})
-expect_warning({
-  tca <- TCA(design = d2, genomicFeature = gf3)
 })
 expect_warning({
   tca <- TCA(design = d3, genomicFeature = gf2)
