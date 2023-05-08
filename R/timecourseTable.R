@@ -16,9 +16,7 @@
 #' @param control.group a character string giving the time point to 
 #' be compared with, i.e., the denominator in the fold changes. It 
 #' should match one of the time points in the \code{design} table 
-#' in the \code{TCA} object. if not specified, the first time point in 
-#' the \code{design} table will be used. \code{control.group} will 
-#' only be used when \code{value} is "\code{FC}". 
+#' in the \code{TCA} object. 
 #' 
 #' @param lib.norm logical indicating whether or not use effective
 #' library size (see "Details" in \code{\link{counts}}).
@@ -115,6 +113,10 @@ timecourseTable <- function(object, value = "expression", control.group=NULL,
   }
   if (value == "FC") {
     tc <- NULL
+    if(is.null(control.group)){
+      err <- paste0("control group needs to be specified.")
+      stop(err)
+    }
     group1 <- control.group
     tc <- cbind(tc, rep(0, length(genointerval[, 1])))
     group2 <- group[group != group1]

@@ -129,12 +129,12 @@ timeclust <- function(x, algo, k, dist = "distance", dist.method = "euclidean",
          one of the distance measures in dist function")
   }
   if (algo == "km") {
-    if(dist != "euclidean"){
+    if(dist.method != "euclidean"){
       stop("kmeans only support euclidean metric; for other distance metrices, please see the help page")
     }
   }
   if (algo == "cm" ) {
-    if(!dist %in% c("euclidean", "manhattan")){
+    if(!dist.method %in% c("euclidean", "manhattan")){
       stop("cmeans only support euclidean or mahattan distance metrics")
     }
   }

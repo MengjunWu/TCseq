@@ -31,7 +31,7 @@
 #' counting paramters by passing additional arguments (...), otherwise 
 #' the default settings of the two methods will be used. For details 
 #' of the counting parameters, see \code{\link{summarizeOverlaps}}, 
-#' \code{featureCounts}.
+#' \code{\link{featureCounts}}.
 #'
 #'
 #' @return

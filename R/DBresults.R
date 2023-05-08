@@ -16,10 +16,13 @@
 #' \code{timeclust} should be already called.
 #'
 #' @param group1 character string giving the group to be compared with,
-#' i.e., the denominator in the fold changes.
+#' i.e., the denominator in the fold changes. group1 can be set NULL and 
+#' will be ignored if the comparisons are passed to \code{contrasts}
 #'
 #' @param group2 a character vetor giving the other groups to 
 #' compare with \code{group1}, i.e., the numerator in the fold changes.
+#' group2 can be set NULL and will be ignored if the comparisons are 
+#' passed to \code{contrasts}
 #'
 #' @param contrasts a character vector, each string in
 #' the vector gives a contrast of two groups with the format
@@ -146,10 +149,9 @@ DBresult <- function(object, group1 = NULL, group2 = NULL,
   if (is.null(group1) && is.null(group2) && is.null(contrasts)) {
     stop("Either information of groups to compare or \"contrasts\" should be provided")
   }
-  if (is.null(contrasts)) {
-    if (is.null(group1) || is.null(group2)) {
-      stop("One group is missing, two groups should be provided for differential event analysis.")
-    }
+  if (!is.null(contrasts)){
+    contrasts <- contrasts
+  }else{
     if (sum(group1 %in% group2) > 0) {
       warning("Members in group1 are also found in group2, overlapped members are removed from group2.")
       group2 <- group2[-which(group2 %in% group1)]

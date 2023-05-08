@@ -1,6 +1,6 @@
 #' Perform differential expression analysis
 #'
-#' This function is wrapper for the \code{\link{glmFit}} in edgeR package.
+#' This function is a wrapper for the \code{\link{glmFit}} in edgeR package.
 #'
 #' @param object a \code{TCA} object.
 #'

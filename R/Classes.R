@@ -243,7 +243,7 @@ TCA <- function(design, counts = matrix(0L, 0L, 0L), genomicFeature,
     stop(err)
   }
   colnames(design) <- tolower(colnames(design))
-  if(class(design$timepoint != "character")){
+  if(class(design$timepoint) != "character"){
     design$timepoint <- as.character(design$timepoint)
     warning("time points in 'design' are not characters, converted to characters")
   }
