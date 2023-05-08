@@ -30,9 +30,7 @@ compared to the first time point.}
 \item{control.group}{a character string giving the time point to 
 be compared with, i.e., the denominator in the fold changes. It 
 should match one of the time points in the \code{design} table 
-in the \code{TCA} object. if not specified, the first time point in 
-the \code{design} table will be used. \code{control.group} will 
-only be used when \code{value} is "\code{FC}".}
+in the \code{TCA} object.}
 
 \item{lib.norm}{logical indicating whether or not use effective
 library size (see "Details" in \code{\link{counts}}).}

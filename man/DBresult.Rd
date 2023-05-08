@@ -42,10 +42,13 @@ for \code{DBresult.cluster}, both \code{DBanalysis} and
 \code{timeclust} should be already called.}
 
 \item{group1}{character string giving the group to be compared with,
-i.e., the denominator in the fold changes.}
+i.e., the denominator in the fold changes. group1 can be set NULL and 
+will be ignored if the comparisons are passed to \code{contrasts}}
 
 \item{group2}{a character vetor giving the other groups to 
-compare with \code{group1}, i.e., the numerator in the fold changes.}
+compare with \code{group1}, i.e., the numerator in the fold changes.
+group2 can be set NULL and will be ignored if the comparisons are 
+passed to \code{contrasts}}
 
 \item{contrasts}{a character vector, each string in
 the vector gives a contrast of two groups with the format

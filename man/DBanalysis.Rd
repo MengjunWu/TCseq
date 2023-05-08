@@ -46,7 +46,7 @@ the genomic feature will be filtered out.}
 A \code{TCA} object
 }
 \description{
-This function is wrapper for the \code{\link{glmFit}} in edgeR package.
+This function is a wrapper for the \code{\link{glmFit}} in edgeR package.
 }
 \details{
 The differetial event is detected by using the generalized
