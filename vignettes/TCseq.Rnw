@@ -104,10 +104,10 @@ str(DBres.sig, strict.width =  "cut")
 
 \section{Temporal pattern analysis}
 \subsection{Construct time course table}
-To detect temporal patterns of the time course sequencing data, the TCseq package uses unsupervised clustering methods. First, a time course table is created for clustering analysis. The rows of the time course table are genomic regions, and the columns are time points, the values can be chosen from normalized read counts or logFC of all time points compared to the initial time point. Such table can be created as follows:
+To detect temporal patterns of the time course sequencing data, the TCseq package uses unsupervised clustering methods. First, a time course table is created for clustering analysis. The rows of the time course table are genomic regions, and the columns are time points, the values can be chosen from normalized read counts or logFC of all time points compared to a given group. Here we compare each time point with the initial time point. Such table can be created as follows:
 <<>>=
 # values are logFC
-tca <- timecourseTable(tca, value = "FC", norm.method = "rpkm", filter = TRUE)
+tca <- timecourseTable(tca, value = "FC", control.group = "0h", norm.method = "rpkm", filter = TRUE)
 @
 or
 <<>>=
